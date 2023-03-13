@@ -1,0 +1,23 @@
+{
+  "name": "dog-walkerr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.1",
+    "nodemon": "^2.0.21",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "slick-carousel": "^1.8.1",
+    "tw-elements": "^1.0.0-beta1"
+  }
+}
