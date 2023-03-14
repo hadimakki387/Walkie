@@ -1,4 +1,6 @@
 
+
+
 // This function is to creat slide animantion to the humburger menu on the mobile verision
 $("button.mobile-menu-button").click(function() {
   $(".mobile-menu").toggleClass("slide");
@@ -38,8 +40,15 @@ $(".links").click(function () {
   })
 
 
+  // This function is to creat slide animantion to the humburger menu on the mobile verision
+  $('.homeBurger').click(()=>{ 
+    $('.leftSilder').toggleClass('slideIn '); 
+    $('.bgChange').toggleClass('brightness-50 ') 
+    if ($('.leftSilder').hasClass('slideIn')) { 
+      $('.leftSilder').animate({ left: '0px' }); 
+    } else { 
+      $('.leftSilder').animate({ left: '-384px' }); 
+    } })
   
-
-  
-
+    console.log("hello")
   
