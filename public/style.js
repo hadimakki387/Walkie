@@ -50,5 +50,3 @@ $(".links").click(function () {
       $('.leftSilder').animate({ left: '-384px' }); 
     } })
   
-    console.log("hello")
-  
