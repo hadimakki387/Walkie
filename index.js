@@ -105,7 +105,9 @@ app.get("/", (req, res) => {
 
 // Render sign-in page
 app.get("/signIn", (req, res) => {
-  res.render("signIn");
+  
+    res.render('signIn');
+  
 });
 
 // After successful sign-in, render sign-up page if it is a new user or
@@ -135,7 +137,7 @@ app.get('/signUp', (req, res) => {
           .catch(err=>{
             console.log(err);
           })
-        res.render('signIn');
+        res.redirect('/signIn');
       }
     });
   } else {
@@ -206,7 +208,7 @@ app.post(
   multer().single("image"),
   (req, res) => {
     // Handles posting walk data
-
+    let id = req.user.id
     let address = req.body.address;
     let dogsName = req.body.dogName;
     let dogBreed = req.body.dogBreed;

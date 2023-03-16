@@ -43,7 +43,7 @@ $(".links").click(function () {
   // This function is to creat slide animantion to the humburger menu on the mobile verision
   $('.homeBurger').click(()=>{ 
     $('.leftSilder').toggleClass('slideIn '); 
-    $('.bgChange').toggleClass('brightness-50 ') 
+    $('.bgChange').toggleClass('brightness-50 blur-sm') 
     if ($('.leftSilder').hasClass('slideIn')) { 
       $('.leftSilder').animate({ left: '0px' }); 
     } else { 
