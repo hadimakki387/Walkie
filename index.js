@@ -110,45 +110,79 @@ app.get("/signIn", (req, res) => {
 
 // After successful sign-in, render sign-up page if it is a new user or
 // redirect to dashboard if user already exists
-app.get("/signUp", isLoggedIn, (req, res) => {
-  let name = req.user.displayName;
-  let id = req.user.id;
-  let img = req.user.photos[0].value;
-
-  const dogOwner = new DogOwner({
-    name: name,
-    id: id,
-  });
-  dogOwner.save();
-  res.render("signUp");
-});
-
-// Start Google OAuth2 flow
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile"] })
-);
-
-// Complete Google OAuth2 flow and redirect to homepage
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/signUp" }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    let id = req.user.id;
+app.get('/signUp', (req, res) => {
+  if (req.isAuthenticated()) {
+    const id = req.user.id;
     DogOwner.findOne({ id: id }).then((foundDogOwner) => {
       if (foundDogOwner) {
-        res.redirect("/home");
-      } else res.redirect("/signUp");
+        res.redirect('/home');
+      } else {
+        let name = req.user.displayName;
+        let img = req.user.photos[0].value;
+        let id = req.user.id
+
+        const dogOwner = new DogOwner({
+          name: name,
+          id: id,
+        });
+
+        DogOwner.findOne({id:id})
+          .then(foundOwnrer=>{
+            if(!foundOwnrer){
+              dogOwner.save()
+            }
+          })
+          .catch(err=>{
+            console.log(err);
+          })
+        res.render('signIn');
+      }
     });
+  } else {
+    // User is not authenticated
+    res.render('signUp');
   }
-);
+});
+
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signIn' }), (req, res) => {
+  const id = req.user.id;
+
+  DogOwner.findOne({ id: id }).then((foundDogOwner) => {
+    if (!foundDogOwner) {
+      res.redirect('/signUp');
+    } else {
+      res.redirect('/home');
+    }
+  });
+});
+
+
 
 // Render dashboard page after successful authentication
 app.get("/home", isLoggedIn, (req, res) => {
   let name = req.user.displayName;
   let img = req.user.photos[0].value;
-  console.log(img);
+  let id = req.user.id
+
+  const dogOwner = new DogOwner({
+    name: name,
+    id: id,
+  });
+
+  DogOwner.findOne({id:id})
+    .then(foundOwnrer=>{
+      if(!foundOwnrer){
+        dogOwner.save()
+      }
+    })
+    .catch(err=>{
+      console.log(err);
+    })
+
+  
   res.render("dashboard", { img, name });
 });
 
