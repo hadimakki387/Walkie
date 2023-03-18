@@ -12,6 +12,9 @@ const upload = multer({ storage: storage });
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require('uuid');
+const {DogOwner, DogWalker, walkingPost} = require('./src/user/userModels')
+require('./src/config/google')
+require('./src/config/passport')
 
 // Set view engine
 app.set("view engine", "ejs");
@@ -37,65 +40,8 @@ app.use(passport.session());
 // Connect to MongoDB database
 mongoose.connect("mongodb://127.0.0.1:27017/walkie");
 
-// Define dog owner schema
-const dogOwnerSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  id: String,
-  address: String,
-  dogs: [String],
-});
 
-// Define dog walker schema
-const dogWalkerSchema = new mongoose.Schema({
-  Fname: String,
-  Lname: String,
-  email: String,
-  password: String,
-  address: String,
-  telNumber: Number,
-  address:String,
-  age: Number,
-  id:String,
-  availability: [String],
-  specialSkills: [String],
-});
 
-// Define walking post schema
-const walkingPostSchema = new mongoose.Schema({
-  ownerName: String,
-  id: String,
-  dogName: String,
-  dogBreed: String,
-  address: String,
-  img: Buffer,
-});
-
-// Create models for each schema
-const DogOwner = mongoose.model("DogOwner", dogOwnerSchema);
-const DogWalker = mongoose.model("DogWalker", dogWalkerSchema);
-const walkingPost = mongoose.model("walkingPost", walkingPostSchema);
-
-// Configure Google OAuth2 using passport
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/callback",
-    },
-    function (accessToken, refreshToken, profile, cb) {
-      cb(null, profile);
-    }
-  )
-);
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
 
 // Middleware function to check if user is authenticated
 function isLoggedIn(req, res, next) {
@@ -152,18 +98,12 @@ app.get('/signUp', (req, res) => {
 });
 
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+app.get('/auth/google', passport.authenticate('google', { scope: ["profile", "email"] }));
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signIn' }), (req, res) => {
-  const id = req.user.id;
 
-  DogOwner.findOne({ id: id }).then((foundDogOwner) => {
-    if (!foundDogOwner) {
-      res.redirect('/signUp');
-    } else {
-      res.redirect('/home');
-    }
-  });
+  res.redirect('/home');
+   
 });
 
 
@@ -171,12 +111,21 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 // Render dashboard page after successful authentication
 app.get("/home", isLoggedIn, (req, res) => {
   let name = req.user.displayName;
+  let Fname = req.user.name.givenName;
+  let Lname = req.user.name.familyName;
   let img = req.user.photos[0].value;
+  let email = req.user.emails[0].value;
   let id = req.user.id
 
+  
+  console.log(Lname)
+
   const dogOwner = new DogOwner({
+    Fname:Fname,
+    Lname:Lname,
     name: name,
     id: id,
+    email:email
   });
 
   DogOwner.findOne({id:id})
@@ -239,14 +188,49 @@ app.post('/dog-walker',async (req,res)=>{
       console.log(err)
     })
 
-    res.send("hello")
+    res.redirect('/posts')
     
   
 })
 
-app.post("/signIn", (req, res) => {
+app.get('/posts',(req,res)=>{
+  res.render('posts')
+})
+
+app.post("/signIn",(req, res) => {
   res.render("signIn"); // Render view for sign in page
 });
+
+app.post('/signUp',async (req,res)=>{
+  const {Fname,Lname,email,password} = req.body
+  const hashedPassword = await bcrypt.hash(password, 10)
+  const id = uuidv4()
+  const fullName= Fname + "" + Lname
+
+  const dogOwner = new DogOwner({
+    Fname:Fname,
+    Lname:Lname,
+    name: fullName,
+    id: id,
+    email:email
+  })
+  
+  DogOwner.findOne({email:email})
+    .then(foundOwner=>{
+      if(!foundOwner){
+        dogOwner.save()
+        const user = {
+          name:fullName,
+          id : id
+        }
+        req.session.user = user
+        res.redirect('/posts')
+      }else{
+        res.redirect('/signIn')
+      }
+    })
+
+})
 
 app.post(
   "/home/walk-your-dog",
