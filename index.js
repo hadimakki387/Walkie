@@ -165,7 +165,10 @@ app.get("/home", isLoggedIn, (req, res) => {
   
   res.render("dashboard", { img, name });
   }else{
-    res.render('dashboard',{img:null})
+    const { user } = req.session;
+    const { name,id,email,img }=user
+    console.log(name)
+    res.render('dashboard',{img:null,name})
   }
   
 });
@@ -235,8 +238,10 @@ app.post("/signIn",async (req, res) => {
         const isMatch = await bcrypt.compare(password, foundOwner.password);
         if (isMatch) {           
           req.session.user={
-            name:foundOwner.fullName,
-            id:foundOwner.id
+            name:foundOwner.name,
+            id:foundOwner.id,
+            img:foundOwner.img,
+            email:foundOwner.email
           }
           res.redirect('/home')
         } else {
