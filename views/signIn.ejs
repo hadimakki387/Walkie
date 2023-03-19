@@ -33,10 +33,14 @@
     <img src="google.png" alt="" class="w-8"> <p class="text-lg font-bold text-zinc-500 w-[13rem]">Continue with Google</p>
   </a>
   
-  <a  href="#" class="email flex justify-center items-center border border-solid bg-emerald-500 hover:bg-emerald-400 transition duration-200 px-6 py-3 rounded-lg gap-4">
-    <img src="" alt="" class="w-8"> <p class="text-xl font-extrabold text-white w-[13rem]">Sign in with email</p>
-  </a>
+  <button  class="email flex justify-center items-center border border-solid bg-emerald-500 hover:bg-emerald-400 transition duration-200 px-6 py-3 rounded-lg ">
+    <img src="" alt="" class="w-8"> <p class="text-xl font-extrabold text-white w-[13rem] mr-3">Sign in with email</p>
+  </button>
 
+  <%if(error){%>
+    <p class="text-red-600 text-center font-bold w-[19rem] m-auto"><%=error%></p>
+  <%}%>
+  
 </div>
 
 <div class="newUser grid justify-center items-center gap-4 mt-4 text-center ">
@@ -56,30 +60,44 @@
     <div class="relative mb-3 xl:w-96">
       <input
         type="email"
-        class="peer m-0 block h-[58px] w-full rounded border border-solid border-neutral-300 bg-white bg-clip-padding py-4 px-3 text-base font-normal leading-tight text-neutral-700 ease-in-out placeholder:text-transparent focus:border-emerald-500 focus:bg-white focus:pt-[1.625rem] focus:pb-[0.625rem] focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:bg-neutral-800 dark:text-neutral-200 [&:not(:placeholder-shown)]:pt-[1.625rem] [&:not(:placeholder-shown)]:pb-[0.625rem]"
+        class="email peer m-0 block h-[58px] w-full rounded border border-solid border-neutral-300 bg-white bg-clip-padding py-4 px-3 text-base font-normal leading-tight text-neutral-700 ease-in-out placeholder:text-transparent focus:border-emerald-500 focus:bg-white focus:pt-[1.625rem] focus:pb-[0.625rem] focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:bg-neutral-800 dark:text-neutral-200 [&:not(:placeholder-shown)]:pt-[1.625rem] [&:not(:placeholder-shown)]:pb-[0.625rem]"
         id="floatingInput"
         placeholder="name@example.com" 
         name="email"
+        required
         />
       <label
         for="floatingInput"
         class="pointer-events-none absolute top-0 left-0 origin-[0_0] border border-solid border-transparent py-4 px-3 text-neutral-700 transition-[opacity,_transform] duration-100 ease-in-out peer-focus:translate-x-[0.15rem] peer-focus:-translate-y-2 peer-focus:scale-[0.85] peer-focus:opacity-[0.65] peer-[:not(:placeholder-shown)]:translate-x-[0.15rem] peer-[:not(:placeholder-shown)]:-translate-y-2 peer-[:not(:placeholder-shown)]:scale-[0.85] peer-[:not(:placeholder-shown)]:opacity-[0.65] motion-reduce:transition-none dark:text-neutral-200"
-        >E-mail</label
+        >email</label
       >
+      <div class="flex justify-center">
+      <div class="relative mb-3 xl:w-96" data-te-input-wrapper-init>
+          <p  class="email-warning text-red-600 text-sm "></p>
+      </div>
     </div>
+    </div>
+    
+
     <div class="relative mb-3 xl:w-96">
       <input
-        type="email"
-        class="peer m-0 block h-[58px] w-full rounded border border-solid border-neutral-300 bg-white bg-clip-padding py-4 px-3 text-base font-normal leading-tight text-neutral-700 ease-in-out placeholder:text-transparent focus:border-emerald-500 focus:bg-white focus:pt-[1.625rem] focus:pb-[0.625rem] focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:bg-neutral-800 dark:text-neutral-200 [&:not(:placeholder-shown)]:pt-[1.625rem] [&:not(:placeholder-shown)]:pb-[0.625rem]"
+        type="password"
+        class="password peer m-0 block h-[58px] w-full rounded border border-solid border-neutral-300 bg-white bg-clip-padding py-4 px-3 text-base font-normal leading-tight text-neutral-700 ease-in-out placeholder:text-transparent focus:border-emerald-500 focus:bg-white focus:pt-[1.625rem] focus:pb-[0.625rem] focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:bg-neutral-800 dark:text-neutral-200 [&:not(:placeholder-shown)]:pt-[1.625rem] [&:not(:placeholder-shown)]:pb-[0.625rem]"
         id="floatingInput"
         placeholder="name@example.com" 
-        name="email"
+        name="password"
+        required
         />
       <label
         for="floatingInput"
         class="pointer-events-none absolute top-0 left-0 origin-[0_0] border border-solid border-transparent py-4 px-3 text-neutral-700 transition-[opacity,_transform] duration-100 ease-in-out peer-focus:translate-x-[0.15rem] peer-focus:-translate-y-2 peer-focus:scale-[0.85] peer-focus:opacity-[0.65] peer-[:not(:placeholder-shown)]:translate-x-[0.15rem] peer-[:not(:placeholder-shown)]:-translate-y-2 peer-[:not(:placeholder-shown)]:scale-[0.85] peer-[:not(:placeholder-shown)]:opacity-[0.65] motion-reduce:transition-none dark:text-neutral-200"
         >Password</label
       >
+    </div>
+    <div class="flex justify-center">
+      <div class="relative mb-3 xl:w-96" data-te-input-wrapper-init>
+        <p  class="password-warning text-red-600 text-sm "></p>
+      </div>
     </div>
     <button class="bg-emerald-500 py-4 rounded-lg hover:bg-emerald-400 transition duration-200">
       <p class="text-lg font-bold text-white">Continue</p>

@@ -12,7 +12,8 @@ const upload = multer({ storage: storage });
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require('uuid');
-const {DogOwner, DogWalker, walkingPost} = require('./src/user/userModels')
+const {DogOwner, DogWalker, walkingPost} = require('./src/user/userModels');
+const { devNull } = require("os");
 require('./src/config/google')
 require('./src/config/passport')
 
@@ -45,8 +46,15 @@ mongoose.connect("mongodb://127.0.0.1:27017/walkie");
 
 // Middleware function to check if user is authenticated
 function isLoggedIn(req, res, next) {
-  req.user ? next() : res.redirect("/signIn");
+  console.log("middleware is triggered")
+  if (req.user || req.session.user) {
+    console.log("user is authenticated");
+    next();
+  } else {
+    res.redirect("/signIn");
+  }
 }
+
 
 // Render initial page with no user information
 app.get("/", (req, res) => {
@@ -58,16 +66,30 @@ app.get("/", (req, res) => {
 
 // Render sign-in page
 app.get("/signIn", (req, res) => {
-    res.render('signIn');
+  //handling the error from the paameters is existed
+  let error;
+  if(req.query.error==="account-existing"){
+    error = "already have an account please SignIn to get access";
+  }else if(req.query.error==="wrong-credentials"){
+    error = "Wrong Password or E-mail, please try again";
+  }
+  res.render('signIn',{error:error})
 });
 
 // After successful sign-in, render sign-up page if it is a new user or
 // redirect to dashboard if user already exists
-app.get('/signUp', (req, res) => {
+app.get('/signUp',async (req, res) => {
+
+  //handling the error from the paameters is existed
+  let error;
+  if(req.query.error==="account-not-existing"){
+    error = "You do not have a account, Please Sign Up";
+  }
+
   if (req.isAuthenticated()) {
     const id = req.user.id;
     DogOwner.findOne({ id: id }).then((foundDogOwner) => {
-      if (foundDogOwner) {
+      if ( foundDogOwner) {
         res.redirect('/home');
       } else {
         let name = req.user.displayName;
@@ -88,12 +110,12 @@ app.get('/signUp', (req, res) => {
           .catch(err=>{
             console.log(err);
           })
-        res.redirect('/signIn');
+        res.redirect('/home');
       }
     });
   } else {
     // User is not authenticated
-    res.render('signUp');
+    res.render('signUp',{error:error});
   }
 });
 
@@ -110,7 +132,9 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 
 // Render dashboard page after successful authentication
 app.get("/home", isLoggedIn, (req, res) => {
-  let name = req.user.displayName;
+  console.log("Home triggered");
+  if(req.user){
+    let name = req.user.displayName;
   let Fname = req.user.name.givenName;
   let Lname = req.user.name.familyName;
   let img = req.user.photos[0].value;
@@ -140,6 +164,10 @@ app.get("/home", isLoggedIn, (req, res) => {
 
   
   res.render("dashboard", { img, name });
+  }else{
+    res.render('dashboard',{img:null})
+  }
+  
 });
 
 // Render form for creating a walking post
@@ -191,16 +219,59 @@ app.post('/dog-walker',async (req,res)=>{
     res.redirect('/posts')
     
   
-})
-
+})//the route that will display the dogs posts
 app.get('/posts',(req,res)=>{
   res.render('posts')
 })
 
-app.post("/signIn",(req, res) => {
-  res.render("signIn"); // Render view for sign in page
+//recieving the data from the user and checking them in the database 
+app.post("/signIn",async (req, res) => {
+  const {email,password}=req.body
+  
+
+  await DogOwner.findOne({email:email})
+    .then(async foundOwner=>{
+      if (foundOwner) {
+        const isMatch = await bcrypt.compare(password, foundOwner.password);
+        if (isMatch) {           
+          req.session.user={
+            name:foundOwner.fullName,
+            id:foundOwner.id
+          }
+          res.redirect('/home')
+        } else {
+          res.redirect('signIn?error=wrong-credentials')
+        }
+      } else {
+        await DogWalker.findOne({email:email})
+          .then(async foundWalker=>{
+            if (foundWalker) {
+              const isMatch = await bcrypt.compare(password, foundWalker.password);
+              if (isMatch) {
+                req.session.user={
+                  name:foundWalker.fullName,
+                  id:foundWalker.id
+                }
+                res.redirect('/posts')
+              } else {
+                res.redirect('signIn?error=Wrong-credentials')
+              }
+            } else {
+              res.redirect('/signUp?error=account-not-existing')
+            }
+          })
+          .catch(err=>{
+            console.log(err)
+          })
+      }
+    })
+    .catch(err=>{
+      console.log(err)
+    })
 });
 
+
+//adding a account for the user and checking if it existed
 app.post('/signUp',async (req,res)=>{
   const {Fname,Lname,email,password} = req.body
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -212,7 +283,8 @@ app.post('/signUp',async (req,res)=>{
     Lname:Lname,
     name: fullName,
     id: id,
-    email:email
+    email:email,
+    password:hashedPassword
   })
   
   DogOwner.findOne({email:email})
@@ -224,10 +296,13 @@ app.post('/signUp',async (req,res)=>{
           id : id
         }
         req.session.user = user
-        res.redirect('/posts')
+        res.redirect('/home')
       }else{
-        res.redirect('/signIn')
+        res.redirect('/signIn?error=account-existing')
       }
+    })
+    .catch(err=>{
+      console.log(err)
     })
 
 })
@@ -266,7 +341,10 @@ app.post(
             res.redirect("/home");
           }, 2000);
         }
-      });
+      })
+      .catch(err=>{
+        console.log(err)
+      })
   }
 );
 

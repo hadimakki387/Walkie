@@ -10,6 +10,7 @@ const dogOwnerSchema = new mongoose.Schema({
     email: String,
     id: String,
     address: String,
+    password:String,
     dogs: [String],
   });
   
@@ -36,6 +37,7 @@ const dogOwnerSchema = new mongoose.Schema({
     dogBreed: String,
     address: String,
     img: Buffer,
+    password:String
   });
   
   // Create models for each schema

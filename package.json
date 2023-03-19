@@ -25,6 +25,7 @@
     "nodemon": "^2.0.21",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.7.3",
     "toastr": "^2.1.4",
