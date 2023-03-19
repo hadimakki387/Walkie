@@ -65,6 +65,8 @@ app.get("/signIn", (req, res) => {
     error = "already have an account please SignIn to get access";
   } else if (req.query.error === "wrong-credentials") {
     error = "Wrong Password or E-mail, please try again";
+  }else if(req.query.error === "found-account-google"){
+    error = "You already Signed up using google. Use google sign In to access"
   }
   res.render("signIn", { error: error });
 });
@@ -267,8 +269,15 @@ app.post("/signIn", async (req, res) => {
   await DogOwner.findOne({ email: email })
     .then(async (foundOwner) => {
       if (foundOwner) {
-        const isMatch = await bcrypt.compare(password, foundOwner.password);
-        if (isMatch) {
+
+        //check if the user is from google oAuth or not
+        if(!foundOwner.password){
+          //if he is 
+          res.redirect("signIn?error=found-account-google");
+        }else{
+          //if he is not
+          const isMatch = await bcrypt.compare(password, foundOwner.password);
+          if (isMatch) {
           req.session.user = {
             name: foundOwner.name,
             id: foundOwner.id,
@@ -279,11 +288,16 @@ app.post("/signIn", async (req, res) => {
         } else {
           res.redirect("signIn?error=wrong-credentials");
         }
+        }
+        
       } else {
         await DogWalker.findOne({ email: email })
           .then(async (foundWalker) => {
             if (foundWalker) {
-              const isMatch = await bcrypt.compare(
+              if(!foundWalker.password){
+                res.redirect("signIn?error=found-account-google");
+              }else{
+                const isMatch = await bcrypt.compare(
                 password,
                 foundWalker.password
               );
@@ -296,6 +310,8 @@ app.post("/signIn", async (req, res) => {
               } else {
                 res.redirect("signIn?error=Wrong-credentials");
               }
+              }
+              
             } else {
               res.redirect("/signUp?error=account-not-existing");
             }
