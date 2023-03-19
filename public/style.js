@@ -46,6 +46,7 @@ $(".homeBurger").click(() => {
   }
 });
 
+//this function is for password validation
 const passwordField = $(".password");
 const passwordWarning = $(".password-warning");
 
@@ -64,9 +65,9 @@ function validatePassword() {
     passwordWarning.text("");
   }
 }
-
 passwordField.on("input", validatePassword);
 
+//this function is for email validation
 const emailField = $(".email");
 const emailWarning = $(".email-warning");
 
@@ -82,9 +83,9 @@ function validateEmail() {
     emailWarning.text("");
   }
 }
-
 emailField.on("input", validateEmail);
 
+//this function is for phone number validation
 const phoneField = $(".phone");
 const phoneWarning = $(".phone-warning");
 
@@ -100,5 +101,9 @@ function validatePhone() {
     phoneWarning.text("");
   }
 }
-
 phoneField.on("input", validatePhone);
+
+//this function is to unhide the subit button for adding a profile
+$(".uploadProfile").on("click", () => {
+  $(".submitProfile").removeClass("hidden");
+});

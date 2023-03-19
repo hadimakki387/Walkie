@@ -11,11 +11,11 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const fs = require("fs");
 const bcrypt = require("bcrypt");
-const { v4: uuidv4 } = require('uuid');
-const {DogOwner, DogWalker, walkingPost} = require('./src/user/userModels');
+const { v4: uuidv4 } = require("uuid");
+const { DogOwner, DogWalker, walkingPost } = require("./src/user/userModels");
 const { devNull } = require("os");
-require('./src/config/google')
-require('./src/config/passport')
+require("./src/config/google");
+require("./src/config/passport");
 
 // Set view engine
 app.set("view engine", "ejs");
@@ -30,7 +30,6 @@ app.use(
     secret: "mySecret",
     resave: false,
     saveUninitialized: false,
-    
   })
 );
 
@@ -41,20 +40,14 @@ app.use(passport.session());
 // Connect to MongoDB database
 mongoose.connect("mongodb://127.0.0.1:27017/walkie");
 
-
-
-
 // Middleware function to check if user is authenticated
 function isLoggedIn(req, res, next) {
-  console.log("middleware is triggered")
   if (req.user || req.session.user) {
-    console.log("user is authenticated");
     next();
   } else {
     res.redirect("/signIn");
   }
 }
-
 
 // Render initial page with no user information
 app.get("/", (req, res) => {
@@ -68,109 +61,130 @@ app.get("/", (req, res) => {
 app.get("/signIn", (req, res) => {
   //handling the error from the paameters is existed
   let error;
-  if(req.query.error==="account-existing"){
+  if (req.query.error === "account-existing") {
     error = "already have an account please SignIn to get access";
-  }else if(req.query.error==="wrong-credentials"){
+  } else if (req.query.error === "wrong-credentials") {
     error = "Wrong Password or E-mail, please try again";
   }
-  res.render('signIn',{error:error})
+  res.render("signIn", { error: error });
 });
 
 // After successful sign-in, render sign-up page if it is a new user or
 // redirect to dashboard if user already exists
-app.get('/signUp',async (req, res) => {
-
+app.get("/signUp", async (req, res) => {
   //handling the error from the paameters is existed
   let error;
-  if(req.query.error==="account-not-existing"){
+  if (req.query.error === "account-not-existing") {
     error = "You do not have a account, Please Sign Up";
   }
 
   if (req.isAuthenticated()) {
     const id = req.user.id;
     DogOwner.findOne({ id: id }).then((foundDogOwner) => {
-      if ( foundDogOwner) {
-        res.redirect('/home');
+      if (foundDogOwner) {
+        res.redirect("/home");
       } else {
         let name = req.user.displayName;
         let img = req.user.photos[0].value;
-        let id = req.user.id
+        let id = req.user.id;
 
         const dogOwner = new DogOwner({
           name: name,
           id: id,
         });
 
-        DogOwner.findOne({id:id})
-          .then(foundOwnrer=>{
-            if(!foundOwnrer){
-              dogOwner.save()
+        DogOwner.findOne({ id: id })
+          .then((foundOwnrer) => {
+            if (!foundOwnrer) {
+              dogOwner.save();
             }
           })
-          .catch(err=>{
+          .catch((err) => {
             console.log(err);
-          })
-        res.redirect('/home');
+          });
+        res.redirect("/home");
       }
     });
   } else {
     // User is not authenticated
-    res.render('signUp',{error:error});
+    res.render("signUp", { error: error });
   }
 });
 
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
-app.get('/auth/google', passport.authenticate('google', { scope: ["profile", "email"] }));
-
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signIn' }), (req, res) => {
-
-  res.redirect('/home');
-   
-});
-
-
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/signIn" }),
+  (req, res) => {
+    res.redirect("/home");
+  }
+);
 
 // Render dashboard page after successful authentication
-app.get("/home", isLoggedIn, (req, res) => {
-  console.log("Home triggered");
-  if(req.user){
+app.get("/home", isLoggedIn, async (req, res) => {
+  if (req.user) {
     let name = req.user.displayName;
-  let Fname = req.user.name.givenName;
-  let Lname = req.user.name.familyName;
-  let img = req.user.photos[0].value;
-  let email = req.user.emails[0].value;
-  let id = req.user.id
+    let Fname = req.user.name.givenName;
+    let Lname = req.user.name.familyName;
+    let img = req.user.photos[0].value;
+    let email = req.user.emails[0].value;
+    let id = req.user.id;
 
-  
-  console.log(Lname)
+    const dogOwner = new DogOwner({
+      Fname: Fname,
+      Lname: Lname,
+      name: name,
+      id: id,
+      email: email,
+    });
 
-  const dogOwner = new DogOwner({
-    Fname:Fname,
-    Lname:Lname,
-    name: name,
-    id: id,
-    email:email
-  });
+    await DogOwner.findOne({ id: id })
+      .then((foundOwnrer) => {
+        if (!foundOwnrer) {
+          dogOwner.save();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-  DogOwner.findOne({id:id})
-    .then(foundOwnrer=>{
-      if(!foundOwnrer){
-        dogOwner.save()
-      }
-    })
-    .catch(err=>{
-      console.log(err);
-    })
-
-  
-  res.render("dashboard", { img, name });
-  }else{
+    res.render("dashboard", { img, name });
+  } else {
     const { user } = req.session;
-    const { name,id,email,img }=user
-    console.log(name)
-    res.render('dashboard',{img:null,name})
+    const { name, id, email, img } = user;
+    await DogOwner.findOne({ email: email }).then(async (foundOwner) => {
+      if (foundOwner) {
+        let imageSrc;
+        if (img) {
+          const base64Image = Buffer.from(img).toString("base64");
+          imageSrc = `data:image/png;base64,${base64Image}`;
+        } else {
+          await DogOwner.findOne({ email: email })
+            .then((foundOwner) => {
+              if (foundOwner.profImg) {
+                const base64Image = Buffer.from(foundOwner.profImg).toString(
+                  "base64"
+                );
+                imageSrc = `data:image/png;base64,${base64Image}`;
+              } else {
+                const imageSrc = null;
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+
+        res.render("dashboard", { img: imageSrc, name });
+      } else {
+        res.redirect("/signUp?error=account-not-existing");
+      }
+    });
   }
-  
 });
 
 // Render form for creating a walking post
@@ -183,134 +197,154 @@ app.get("/dog-walker", (req, res) => {
   res.render("dogWalkerSignUp");
 });
 
+//recieved the data from the form of adding pic
+app.post("/home", multer().single("profileImg"), (req, res) => {
+  const { user } = req.session;
+  let { name, id, email, img } = user;
+  const profImgBuffered = req.file.buffer;
+  DogOwner.findOneAndUpdate(
+    { email: email },
+    { profImg: profImgBuffered }
+  ).then((err, document) => {
+    if (err) {
+      console.log(err);
+    }
+  });
 
-app.post('/dog-walker',async (req,res)=>{
-  const {Fname,Lname,password,Email,Tel} = req.body
-  const hashedPassword = await bcrypt.hash(password, 10)
-  const fullName = Fname +" "+ Lname
-  const id = uuidv4()
-  const dogWalker = new DogWalker({
-    Fname:Fname,
-    Lname:Lname,
-    password:hashedPassword,
-    email:Email,
-    telNumber:Tel,
-    id:id
-  })
-
-  DogWalker.findOne({email:Email})
-    .then(foundUser=>{
-      if(foundUser){
-        const user = {
-          name:foundUser.Lname + " " + foundUser.Fname,
-          id:foundUser.id
-        }
-        req.session.user = user
-      }else{
-        dogWalker.save()
-        const user = {
-          name:fullName,
-          id : id
-        }
-        req.session.user = user
-      }
-    })
-    .catch(err=>{
-      console.log(err)
-    })
-
-    res.redirect('/posts')
-    
-  
-})//the route that will display the dogs posts
-app.get('/posts',(req,res)=>{
-  res.render('posts')
-})
-
-//recieving the data from the user and checking them in the database 
-app.post("/signIn",async (req, res) => {
-  const {email,password}=req.body
-  
-
-  await DogOwner.findOne({email:email})
-    .then(async foundOwner=>{
-      if (foundOwner) {
-        const isMatch = await bcrypt.compare(password, foundOwner.password);
-        if (isMatch) {           
-          req.session.user={
-            name:foundOwner.name,
-            id:foundOwner.id,
-            img:foundOwner.img,
-            email:foundOwner.email
-          }
-          res.redirect('/home')
-        } else {
-          res.redirect('signIn?error=wrong-credentials')
-        }
-      } else {
-        await DogWalker.findOne({email:email})
-          .then(async foundWalker=>{
-            if (foundWalker) {
-              const isMatch = await bcrypt.compare(password, foundWalker.password);
-              if (isMatch) {
-                req.session.user={
-                  name:foundWalker.fullName,
-                  id:foundWalker.id
-                }
-                res.redirect('/posts')
-              } else {
-                res.redirect('signIn?error=Wrong-credentials')
-              }
-            } else {
-              res.redirect('/signUp?error=account-not-existing')
-            }
-          })
-          .catch(err=>{
-            console.log(err)
-          })
-      }
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+  console.log(email);
+  console.log(req.file.buffer);
+  res.redirect("/home");
 });
 
-
-//adding a account for the user and checking if it existed
-app.post('/signUp',async (req,res)=>{
-  const {Fname,Lname,email,password} = req.body
-  const hashedPassword = await bcrypt.hash(password, 10)
-  const id = uuidv4()
-  const fullName= Fname + "" + Lname
-
-  const dogOwner = new DogOwner({
-    Fname:Fname,
-    Lname:Lname,
-    name: fullName,
+//recieved data from the dog walker form
+app.post("/dog-walker", async (req, res) => {
+  const { Fname, Lname, password, Email, Tel } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const fullName = Fname + " " + Lname;
+  const id = uuidv4();
+  const dogWalker = new DogWalker({
+    Fname: Fname,
+    Lname: Lname,
+    password: hashedPassword,
+    email: Email,
+    telNumber: Tel,
     id: id,
-    email:email,
-    password:hashedPassword
-  })
-  
-  DogOwner.findOne({email:email})
-    .then(foundOwner=>{
-      if(!foundOwner){
-        dogOwner.save()
+  });
+
+  DogWalker.findOne({ email: Email })
+    .then((foundUser) => {
+      if (foundUser) {
         const user = {
-          name:fullName,
-          id : id
-        }
-        req.session.user = user
-        res.redirect('/home')
-      }else{
-        res.redirect('/signIn?error=account-existing')
+          name: foundUser.Lname + " " + foundUser.Fname,
+          id: foundUser.id,
+        };
+        req.session.user = user;
+      } else {
+        dogWalker.save();
+        const user = {
+          name: fullName,
+          id: id,
+        };
+        req.session.user = user;
       }
     })
-    .catch(err=>{
-      console.log(err)
-    })
+    .catch((err) => {
+      console.log(err);
+    });
 
-})
+  res.redirect("/posts");
+});
+
+//the route that will display the dogs posts
+app.get("/posts", (req, res) => {
+  res.render("posts");
+});
+
+//recieving the data from the user and checking them in the database
+app.post("/signIn", async (req, res) => {
+  const { email, password } = req.body;
+
+  await DogOwner.findOne({ email: email })
+    .then(async (foundOwner) => {
+      if (foundOwner) {
+        const isMatch = await bcrypt.compare(password, foundOwner.password);
+        if (isMatch) {
+          req.session.user = {
+            name: foundOwner.name,
+            id: foundOwner.id,
+            img: foundOwner.profImg,
+            email: foundOwner.email,
+          };
+          res.redirect("/home");
+        } else {
+          res.redirect("signIn?error=wrong-credentials");
+        }
+      } else {
+        await DogWalker.findOne({ email: email })
+          .then(async (foundWalker) => {
+            if (foundWalker) {
+              const isMatch = await bcrypt.compare(
+                password,
+                foundWalker.password
+              );
+              if (isMatch) {
+                req.session.user = {
+                  name: foundWalker.fullName,
+                  id: foundWalker.id,
+                };
+                res.redirect("/posts");
+              } else {
+                res.redirect("signIn?error=Wrong-credentials");
+              }
+            } else {
+              res.redirect("/signUp?error=account-not-existing");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+//adding a account for the user and checking if it existed
+app.post("/signUp", async (req, res) => {
+  const { Fname, Lname, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const id = uuidv4();
+  const fullName = Fname + " " + Lname;
+
+  const dogOwner = new DogOwner({
+    Fname: Fname,
+    Lname: Lname,
+    name: fullName,
+    id: id,
+    email: email,
+    password: hashedPassword,
+  });
+
+  DogOwner.findOne({ email: email })
+    .then((foundOwner) => {
+      if (!foundOwner) {
+        dogOwner.save();
+        const user = {
+          name: fullName,
+          id: id,
+          email: email,
+        };
+        req.session.user = user;
+        res.redirect("/home");
+      } else {
+        res.redirect("/signIn?error=account-existing");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 app.post(
   "/home/walk-your-dog",
@@ -318,8 +352,8 @@ app.post(
   multer().single("image"),
   (req, res) => {
     // Handles posting walk data
-    let id = req.user.id
-    const {address,dogsName,dogBreed,name} = req.body
+    let id = req.user.id;
+    const { address, dogsName, dogBreed, name } = req.body;
     const imgBuffered = req.file.buffer;
 
     const walkPost = new walkingPost({
@@ -347,9 +381,9 @@ app.post(
           }, 2000);
         }
       })
-      .catch(err=>{
-        console.log(err)
-      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 );
 
