@@ -199,6 +199,11 @@ app.get("/dog-walker", (req, res) => {
   res.render("dogWalkerSignUp");
 });
 
+//the route that will display the dogs posts
+app.get("/posts", (req, res) => {
+  res.render("posts");
+});
+
 //recieved the data from the form of adding pic
 app.post("/home", multer().single("profileImg"), (req, res) => {
   const { user } = req.session;
@@ -257,10 +262,7 @@ app.post("/dog-walker", async (req, res) => {
   res.redirect("/posts");
 });
 
-//the route that will display the dogs posts
-app.get("/posts", (req, res) => {
-  res.render("posts");
-});
+
 
 //recieving the data from the user and checking them in the database
 app.post("/signIn", async (req, res) => {

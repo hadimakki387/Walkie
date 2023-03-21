@@ -1,7 +1,75 @@
 <%- include('header'); -%>
 
 <div>
-    hello
+    
+    <div class="l">
+        <div class="fixed z-10 w-[100vw] top-0">
+        <nav class=" shadow-lg">
+          <div class="mx-auto px-4">
+            <div class="">
+              <div class="flex justify-between">
+                <!-- Primary Navbar items -->
+                <div class="hidden md:flex items-center space-x-1">
+                  <!-- Website Logo -->
+                  <div class="">
+                    <a href="/" class="flex items-center py-4 px-2 mt-1">
+                      <img
+                        src="walkie.png"
+                        alt="Logo"
+                        class="mr-2 w-32 rotate-1"
+                      />
+                    </a>
+                  </div>
+                  
+                </div>
+                <!-- Secondary Navbar items -->
+                <div class="hidden md:flex items-center space-x-3">
+                  <img src="user.png" alt="" class="w-16 rounded-full">
+                </div>
+              </div>
+              <div class="md:hidden flex justify-between items-center">
+                <div class="">
+                  <a href="#" class="flex items-center py-4 px-2 mt-1">
+                    <img
+                      src="walkie.png"
+                      alt="Logo"
+                      class="w-32 mr-2"
+                    />
+                  </a>
+                </div>
+                <div>
+                  <!-- Mobile menu button -->
+                  <div class="md:hidden flex items-center">
+                    <button class="outline-none mobile-menu-button">
+                      <svg
+                        class="w-8 h-8 text-emerald-500"
+                        x-show="!showMenu"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+    </div>
+</div>
+<div class="mt-16 flex  items-center justify-evenly  h-12 shadow-md shadow-neutral-300">
+  <a href="" class="hover:scale-110 transition duration-200 hover:text-emerald-500">Labradors</a>
+  <a href="" class="hover:scale-110 transition duration-200 hover:text-emerald-500">German Shepard</a>
+  <a href="" class="hover:scale-110 transition duration-200 hover:text-emerald-500">Mastif</a>
+  <a href="" class="hover:scale-110 transition duration-200 hover:text-emerald-500">chiwawa</a>
+  <a href="" class="hover:scale-110 transition duration-200 hover:text-emerald-500">Doberman</a>
 </div>
 
 
