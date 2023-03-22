@@ -203,7 +203,8 @@ app.get("/dog-walker", (req, res) => {
 app.get("/posts", (req, res) => {
   walkingPost.find()
     .then(foundPosts=>{
-       res.render("posts",{foundPosts});
+      
+      res.render("posts",{foundPosts});
     })
 });
 
@@ -377,7 +378,7 @@ app.post(
     const name = req.user?req.user.displayName:req.session.user.name
     console.log(id)
 
-    const { address, dogName, dogBreed } = req.body;
+    const { address, dogName, dogBreed, DogDescription } = req.body;
     console.log(name)
     const imgBuffered = req.file.buffer;
 
@@ -387,7 +388,8 @@ app.post(
       dogName: dogName,
       dogBreed: dogBreed,
       address: address,
-      img: imgBuffered.toString("base64"), // Set image with uploaded file converted to base64 format string
+      descriptions: DogDescription,
+      img: imgBuffered, // Set image with uploaded file converted to base64 format string
     });
 
     walkingPost

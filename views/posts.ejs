@@ -98,22 +98,29 @@
   </div>
 
   <%foundPosts.forEach(foundPost=>{%>
+    <%const img =foundPost.img%>
+    <%const base64Image = Buffer.from(img).toString("base64");%>
+    <%const imgF = "data:image/png;base64,"+base64Image%>
+    
     <div class="w-[100%] grid  border border-neutral-400 rounded-sm p-4 gap-2 mb-4">
-    <img src="user.png" alt="" class="w-32 relative justify-center items-center m-auto">
+      <img src="<%=imgF%>" alt="" class="w-32 relative justify-center items-center m-auto rounded-full h-32 w-32 object-contain">
     <div class="flex justify-between items-center w-[100%]">
       <div>
-        <p class="text-2xl font-bold text-zinc-600"><%=foundPost.dogBreed%></p>
+        <p class="text-3xl font-bold text-zinc-600"><%=foundPost.dogName%>! a <%=foundPost.dogBreed%></p>
       </div>
+      
       <div>
         <p class="text-xl font-bold text-zinc-600">15$</p>
       </div>
       
     </div>
+    <div>
+      <p class="text-xl font-bold text-zinc-600">Pet for <%=foundPost.ownerName%></p>
+    </div>
     <div class="flex justify-between items-center w-[100%]">
       <div>
-        <p class="w-1/2">Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vivamus magna justo, 
-        lacinia eget consectetur sed, convallis at tellus. Lorem ipsum dolor sit amet, 
-        consectetur adipiscing elit.
+        <p class="w-1/2">
+          <%=foundPost.descriptions%>
       </p>
       </div>
       <div class=" flex ">
