@@ -201,7 +201,10 @@ app.get("/dog-walker", (req, res) => {
 
 //the route that will display the dogs posts
 app.get("/posts", (req, res) => {
-  res.render("posts");
+  walkingPost.find()
+    .then(foundPosts=>{
+       res.render("posts",{foundPosts});
+    })
 });
 
 //recieved the data from the form of adding pic
@@ -370,14 +373,18 @@ app.post(
   multer().single("image"),
   (req, res) => {
     // Handles posting walk data
-    let id = req.user.id;
-    const { address, dogsName, dogBreed, name } = req.body;
+    const id=req.user?req.user.id:req.session.user.id
+    const name = req.user?req.user.displayName:req.session.user.name
+    console.log(id)
+
+    const { address, dogName, dogBreed } = req.body;
+    console.log(name)
     const imgBuffered = req.file.buffer;
 
     const walkPost = new walkingPost({
       id: id,
       ownerName: name,
-      dogName: dogsName,
+      dogName: dogName,
       dogBreed: dogBreed,
       address: address,
       img: imgBuffered.toString("base64"), // Set image with uploaded file converted to base64 format string

@@ -107,3 +107,13 @@ phoneField.on("input", validatePhone);
 $(".uploadProfile").on("click", () => {
   $(".submitProfile").removeClass("hidden");
 });
+
+$('.BTN').click(()=>{
+  $('.BTN').text('request sent')
+  $('.BTN').css({
+    'background-color':'white',
+    'color':'#10b981'
+  })
+})
+
+console.log("style.js working")
