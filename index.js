@@ -14,6 +14,7 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const { DogOwner, DogWalker, walkingPost } = require("./src/user/userModels");
 const { devNull } = require("os");
+const _ = require('lodash');
 require("./src/config/google");
 require("./src/config/passport");
 
@@ -22,6 +23,7 @@ app.set("view engine", "ejs");
 
 // Serve static files from public directory
 app.use(express.static("public"));
+app.use(express.json());
 
 // Use body parser middleware and session management
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -201,11 +203,31 @@ app.get("/dog-walker", (req, res) => {
 
 //the route that will display the dogs posts
 app.get("/posts", (req, res) => {
-  walkingPost.find()
+  
+    console.log(req.session)
+  
+    if(req.query.dogBreed){
+      const dog = req.query.dogBreed
+      walkingPost.find({dogBreed:dog})
+        .then(foundPosts=>{
+          const postsCount = foundPosts.filter(posts=>posts.availability===true).length;
+          res.render("posts",{foundPosts,postsCount});
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    }else{
+      walkingPost.find()
     .then(foundPosts=>{
-      
-      res.render("posts",{foundPosts});
+      const postsCount = foundPosts.filter(posts=>posts.availability===true).length;
+      res.render("posts",{foundPosts,postsCount});
     })
+    .catch(err=>{
+      console.log(err)
+    })
+    }
+    
+    
 });
 
 //recieved the data from the form of adding pic
@@ -236,6 +258,7 @@ app.post("/dog-walker", async (req, res) => {
   const dogWalker = new DogWalker({
     Fname: Fname,
     Lname: Lname,
+    name:fullName,
     password: hashedPassword,
     email: Email,
     telNumber: Tel,
@@ -245,18 +268,21 @@ app.post("/dog-walker", async (req, res) => {
   DogWalker.findOne({ email: Email })
     .then((foundUser) => {
       if (foundUser) {
-        const user = {
-          name: foundUser.Lname + " " + foundUser.Fname,
+        req.session.user = {
+          name: foundUser.name,
           id: foundUser.id,
-        };
-        req.session.user = user;
+          phone:foundUser.telNumber,
+          email:foundUser.email
+        };;
       } else {
         dogWalker.save();
-        const user = {
+        
+        req.session.user = {
           name: fullName,
           id: id,
+          Phone:Tel,
+          email:Email
         };
-        req.session.user = user;
       }
     })
     .catch((err) => {
@@ -266,7 +292,19 @@ app.post("/dog-walker", async (req, res) => {
   res.redirect("/posts");
 });
 
+app.post('/posts',(req,res)=>{
+  console.log(req.body.id);
+  const id=req.body.id
+  walkingPost.findOneAndUpdate({id:id},{availability:false})
+    .then(err=>{
+      console.log(err)
+    })
+  DogOwner.findOneAndUpdate({id:req.session.user.id},{notification:true})
+  .then(err=>{
+    console.log(err)
+  })
 
+})
 
 //recieving the data from the user and checking them in the database
 app.post("/signIn", async (req, res) => {
@@ -309,8 +347,10 @@ app.post("/signIn", async (req, res) => {
               );
               if (isMatch) {
                 req.session.user = {
-                  name: foundWalker.fullName,
+                  name: foundWalker.name,
                   id: foundWalker.id,
+                  telNumber:foundWalker.telNumber,
+                  email:foundWalker.email
                 };
                 res.redirect("/posts");
               } else {
@@ -386,9 +426,10 @@ app.post(
       id: id,
       ownerName: name,
       dogName: dogName,
-      dogBreed: dogBreed,
+      dogBreed: _.capitalize(dogBreed),
       address: address,
       descriptions: DogDescription,
+      availability:true,
       img: imgBuffered, // Set image with uploaded file converted to base64 format string
     });
 

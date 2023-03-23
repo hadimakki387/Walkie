@@ -108,12 +108,29 @@ $(".uploadProfile").on("click", () => {
   $(".submitProfile").removeClass("hidden");
 });
 
-$('.BTN').click(()=>{
-  $('.BTN').text('request sent')
-  $('.BTN').css({
-    'background-color':'white',
-    'color':'#10b981'
-  })
-})
+$('.BTN').each(function(index, button) {
+  $(button).click(() => {
+    $(button).text('request sent');
+    $(button).css({
+      'background-color': 'white',
+      'color': '#10b981'
+    });
+  });
+});
+
+
+function sendRequest(id) {
+  fetch('/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id })
+  }).then(() => {
+    console.log('Clicked');
+  }).catch(err => {
+    console.error(err);
+  });
+}
 
 console.log("style.js working")
