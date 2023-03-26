@@ -231,7 +231,8 @@ app.get("/posts", (req, res) => {
 });
 
 app.get('/WalkerProfile',(req,res)=>{
-  res.render('WalkerProfile')
+  let img
+  res.render('WalkerProfile',{img})
 })
 
 app.get('/logout', function(req, res) {
@@ -245,6 +246,9 @@ app.get('/logout', function(req, res) {
 });
 
 
+app.post('/WalkerProfile',(req,res)=>{
+  res.redirect('/WalkerProfile')
+})
 //recieved the data from the form of adding pic
 app.post("/home", multer().single("profileImg"), (req, res) => {
   const { user } = req.session;

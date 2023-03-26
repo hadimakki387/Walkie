@@ -1,5 +1,171 @@
 <%- include('header'); -%>
 
-<div>fksdjhfkshf</div>
+<div>
+  <div class="l">
+    <div class="fixed z-10 w-[100vw] top-0">
+      <nav class=" ">
+        <div class="mx-auto px-4">
+          <div class="">
+            <div class="flex justify-between">
+              <!-- Primary Navbar items -->
+              <div class="hidden md:flex items-center space-x-1">
+                <!-- Website Logo -->
+                <div class="">
+                  <a href="#" class="flex items-center py-4 px-2 mt-1">
+                    <img
+                      src="walkie.png"
+                      alt="Logo"
+                      class="mx-2 my-2 w-24 rotate-1"
+                    />
+                  </a>
+                </div>
+              </div>
+              <!-- Secondary Navbar items -->
+              <div class="md:flex items-center space-x-3">
+                <div
+                  class="slider hidden absolute right-24 top-6 bg-white shadow-sm shadow-zinc-500 rounded-md transition-all"
+                >
+                  <div
+                    class="hover:bg-emerald-500 py-3 px-5 pb-4 rounded-t-md transition duration-200"
+                  >
+                    <a href="/posts">Available Dogs</a>
+                  </div>
+                  <div
+                    class="hover:bg-emerald-500 py-3 px-5 pb-4 rounded-b-md transition duration-200"
+                  >
+                    <a href="logout">Logout</a>
+                  </div>
+                </div>
 
-<%- include('footer'); -%>
+                <img src="user.png" alt="" class="profile w-16 rounded-full" />
+              </div>
+            </div>
+            <div class="md:hidden flex justify-between items-center">
+              <div class="">
+                <a href="#" class="flex items-center py-4 px-2 mt-1">
+                  <img src="walkie.png" alt="Logo" class="w-32 mr-2" />
+                </a>
+              </div>
+              <div>
+                <!-- Mobile menu button -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <div>
+    <div class="w-full h-96 mt-20 bg-gray-600">
+      <%if(img){%>
+      <img class="object-cover w-full h-full" src="IMG_0292.png" alt="" />
+      <%}else{%>
+      <div class="grid place-items-center w-full h-full">
+        <form action="/WalkerProfile" method="POST" id="myForm">
+          <div class="relative">
+            <input
+              type="file"
+              name="image"
+              id="image"
+              class="sr-only"
+              onchange="document.getElementById('myForm').submit();"
+            />
+            <div
+              class="flex justify-center items-center gap-2 cursor-pointer bg-white py-2 px-4 text-white rounded"
+            >
+              <img src="camera.png" alt="" class="w-8" />
+              <label for="image" class="text-black cursor-pointer">
+                Add Cover
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <%}%>
+    </div>
+    <div class="flex gap-9 w-1/2 m-auto">
+      <div class="relative bottom-5 z-10 w-2/5 text-center">
+        <div class="">
+          <div class="bg-white relative">
+            <img
+              src="user.png"
+              alt=""
+              class="w-32 relative bottom-16 bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
+            />
+          </div>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="grid justify-center items-center gap-2 text-left">
+            <div>Full Name</div>
+            <div>Address</div>
+          </div>
+          <div>
+            <button
+              class="px-8 py-2 bg-whtie border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200 font-bold rounded-sm"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
+
+        <div class="grid items-center mt-8 gap-2">
+          <div class="flex justify-between items-center">
+            <p>Insights</p>
+          </div>
+          <div class="flex justify-between items-center">
+            <p>Walked Dogs</p>
+            <p>0</p>
+          </div>
+          <div class="flex justify-between items-center">
+            <p>Owners worked with</p>
+            <p>0</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 w-3/5 grid gap-6">
+        <div class="">
+          <p
+            class="font-bold text-zinc-600 text-lg mb-2 border-b border-zinc-300"
+          >
+            Descriptions
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi, est.
+            Dignissimos enim odio facere rerum magni illo, voluptas, facilis
+            nobis ab reiciendis perferendis repellendus laborum esse in eveniet
+            sint. Soluta?
+          </p>
+        </div>
+        <div>
+          <p
+            class="font-bold text-zinc-600 text-lg mb-2 border-b border-zinc-300"
+          >
+            Reveiws
+          </p>
+          <div class="grid gap-2">
+            <div class="flex items-center gap-4">
+              <img
+                src="IMG_0292.png"
+                alt=""
+                class="bg-white flex justify-start items-start rounded-full h-12 w-12 object-contain relative"
+              />
+              <p>UserName</p>
+            </div>
+
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi,
+              est. Dignissimos enim odio facere rerum magni illo, voluptas,
+              facilis nobis ab reiciendis perferendis repellendus laborum esse
+              in eveniet sint. Soluta?
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('footer'); -%>
+</div>
