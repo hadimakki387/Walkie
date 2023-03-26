@@ -26,6 +26,9 @@ const dogWalkerSchema = new mongoose.Schema({
   address: String,
   age: Number,
   id: String,
+  descriptions:String,
+  profile:Buffer,
+  coverImg:Buffer,
   availability: [String],
   specialSkills: [String],
 });
@@ -40,7 +43,8 @@ const walkingPostSchema = new mongoose.Schema({
   descriptions:String,
   img: Buffer,
   password: String,
-  availability:Boolean
+  availability:Boolean,
+  submittedBy:String,
 });
 
 // Create models for each schema
