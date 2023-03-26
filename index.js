@@ -230,6 +230,21 @@ app.get("/posts", (req, res) => {
     
 });
 
+app.get('/WalkerProfile',(req,res)=>{
+  res.render('WalkerProfile')
+})
+
+app.get('/logout', function(req, res) {
+  req.session.destroy(function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect('/');
+    }
+  });
+});
+
+
 //recieved the data from the form of adding pic
 app.post("/home", multer().single("profileImg"), (req, res) => {
   const { user } = req.session;

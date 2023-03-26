@@ -133,4 +133,8 @@ function sendRequest(id) {
   });
 }
 
+$('.profile').click(()=>{
+  $('.slider').toggleClass('hidden')
+})
+
 console.log("style.js working")

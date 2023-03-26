@@ -4,7 +4,7 @@
     
     <div class="l">
         <div class="fixed z-10 w-[100vw] top-0">
-        <nav class=" shadow-lg">
+        <nav class=" ">
           <div class="mx-auto px-4">
             <div class="">
               <div class="flex justify-between">
@@ -23,8 +23,17 @@
                   
                 </div>
                 <!-- Secondary Navbar items -->
-                <div class="hidden md:flex items-center space-x-3">
-                  <img src="user.png" alt="" class="w-16 rounded-full">
+                <div class=" md:flex items-center space-x-3">
+                  <div class="slider hidden absolute right-24 top-6 bg-white shadow-sm shadow-zinc-500  rounded-md">
+                    <div class="mb-4 hover:bg-emerald-500 py-3 px-5 rounded-t-md transition duration-200">
+                      <a href="WalkerProfile">Profile</a>
+                    </div>
+                    <div class=" hover:bg-emerald-500 py-3 px-5 rounded-b-md transition duration-200">
+                      <a href="logout">Logout</a>
+                    </div>
+                  </div>
+
+                  <img src="user.png" alt="" class="profile w-16 rounded-full">
                 </div>
               </div>
               <div class="md:hidden flex justify-between items-center">
@@ -39,22 +48,7 @@
                 </div>
                 <div>
                   <!-- Mobile menu button -->
-                  <div class="md:hidden flex items-center">
-                    <button class="outline-none mobile-menu-button">
-                      <svg
-                        class="w-8 h-8 text-emerald-500"
-                        x-show="!showMenu"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path d="M4 6h16M4 12h16M4 18h16"></path>
-                      </svg>
-                    </button>
-                  </div>
+                  
                   
                   
                 </div>
@@ -65,7 +59,7 @@
     </div>
 </div>
 
-  <div class="mt-16 flex  items-center justify-evenly  h-12 shadow-md shadow-neutral-300">
+  <div class="mt-16 flex  items-center justify-evenly  h-12 shadow-md shadow-neutral-300 max-[766px]:hidden">
   <a href="/posts" class="hover:scale-110 transition duration-200 hover:text-emerald-500">Any</a>
   <a href="/posts?dogBreed=Labrador" class="hover:scale-110 transition duration-200 hover:text-emerald-500">Labrador</a>
   <a href="/posts?dogBreed=German Shepard" class="hover:scale-110 transition duration-200 hover:text-emerald-500">German shepard</a>
@@ -75,7 +69,7 @@
   </div>
 
 
-<div class="w-2/3 grid items-center m-auto">
+<div class="w-2/3 grid items-center m-auto  max-[766px]:mt-12">
   <div class="max-w-full grid leading-loose text-3xl font-bold mt-4 ">
   <p>Take a Walk </p>
   <p class="relative bottom-6"><%=postsCount%> Dogs avalable</p>
@@ -86,16 +80,16 @@
         <div class="relative mb-4 flex w-full flex-wrap items-stretch">
           <input
             type="search"
-            class="shadow-md shadow-neutral-300 relative m-0 -mr-px block w-[90%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out  dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+            class="shadow-md shadow-neutral-300 relative m-0 -mr-px block w-[90%] max-[500px]:w-[80%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out  dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
             placeholder="Search"
             aria-label="Search"
             aria-describedby="button-addon3" />
           <button
-            class="relative z-[2] rounded-r border border-emerald-500 bg-emerald-500 hover:text-emerald-500 px-6 py-2 text-xs font-medium uppercase text-white transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 "
+            class="shadow-md shadow-neutral-300 relative z-[2] rounded-r border w-[10%] max-[500px]:w-[20%] border-emerald-500 bg-emerald-500 hover:text-emerald-500 px-6 py-2 max-[1024px]:px-4 max-[820px]:p-3 max-[680px]:p-2 text-xs font-medium uppercase text-white transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 "
             type="button"
             id="button-addon3"
             data-te-ripple-init>
-            <i class="fa-solid fa-arrow-right fa-2x"></i>
+            <i class="fa-solid fa-arrow-right fa-2x "></i>
           </button>
         </div>
       </div>
@@ -107,11 +101,11 @@
     <%const base64Image = Buffer.from(img).toString("base64");%>
     <%const imgF = "data:image/png;base64,"+base64Image%>
     <%if(foundPost.availability===true){%>
-      <div class="w-[100%] grid  border border-neutral-400 rounded-sm p-4 gap-2 mb-4">
+      <div class="w-[100%] grid  border border-neutral-300 rounded-sm p-4 gap-2 mb-4">
       <img src="<%=imgF%>" alt="" class="w-32 relative justify-center items-center m-auto rounded-full h-32 w-32 object-contain">
-    <div class="flex justify-between items-center w-[100%]">
+    <div class="flex justify-between items-center w-[100%] gap-4">
       <div>
-        <p class="text-3xl font-bold text-zinc-600"><%=foundPost.dogName%>! a <%=foundPost.dogBreed%></p>
+        <p class="max-[650px]:text-2xl max-[500px]:text-xl max-[410px]:text-lg text-3xl font-bold text-zinc-600"><%=foundPost.dogName%>! a <%=foundPost.dogBreed%></p>
       </div>
       
       <div>
@@ -120,15 +114,15 @@
       
     </div>
     <div>
-      <p class="text-xl font-bold text-zinc-600">Pet for <%=foundPost.ownerName%></p>
+      <p class="max-[650px]:text-lg max-[500px]:text-base max-[410px]:text-sm text-xl font-bold text-zinc-600">Pet for <%=foundPost.ownerName%></p>
     </div>
-    <div class="flex justify-between items-center w-[100%]">
+    <div class="max-[766px]:grid max-[766px]:m-auto max-[410px]:text-xs flex justify-between items-center w-[100%]">
       <div>
         <p class="w-1/2">
           <%=foundPost.descriptions%>
       </p>
       </div>
-      <div class=" flex ">
+      <div class=" grid">
         <button name="BTN" class=" BTN bg-emerald-500 rounded-sm text-white p-3 w-[12rem] text-center hover:bg-white hover:text-emerald-500 border border-emerald-500 transition duration-200" onclick="sendRequest('<%=foundPost.id%>')">
           Send a requets
         </button>
