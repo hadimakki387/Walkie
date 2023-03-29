@@ -1,14 +1,14 @@
 <%- include('header'); -%>
 
 <div>
-  <div class="l">
-    <div class="fixed z-10 w-[100vw] top-0">
-      <nav class=" ">
+  <div class="">
+    <div class="fixed z-30 w-[100vw] top-0">
+      <nav class="bg-white">
         <div class="mx-auto px-4">
           <div class="">
             <div class="flex justify-between">
               <!-- Primary Navbar items -->
-              <div class="hidden md:flex items-center space-x-1">
+              <div class="flex items-center space-x-1">
                 <!-- Website Logo -->
                 <div class="">
                   <a href="#" class="flex items-center py-4 px-2 mt-1">
@@ -21,7 +21,7 @@
                 </div>
               </div>
               <!-- Secondary Navbar items -->
-              <div class="md:flex items-center space-x-3">
+              <div class="flex items-center space-x-3">
                 <div
                   class="slider hidden absolute right-24 top-6 bg-white shadow-sm shadow-zinc-500 rounded-md transition-all"
                 >
@@ -36,18 +36,17 @@
                     <a href="logout">Logout</a>
                   </div>
                 </div>
-
-                <img src="user.png" alt="" class="profile w-16 rounded-full" />
-              </div>
-            </div>
-            <div class="md:hidden flex justify-between items-center">
-              <div class="">
-                <a href="#" class="flex items-center py-4 px-2 mt-1">
-                  <img src="walkie.png" alt="Logo" class="w-32 mr-2" />
-                </a>
-              </div>
-              <div>
-                <!-- Mobile menu button -->
+                
+                <%if(profile){%>
+                  <img
+                    src="data:image/png;base64,<%=profile%>"
+                    alt=""
+                    class=" bg-white  object-contain profile w-16 h-16 rounded-full"
+                  />
+                  <%}else{%>
+                    <img src="user.png" alt="" class="profile w-16 rounded-full" />
+                  <%}%>
+                
               </div>
             </div>
           </div>
@@ -58,21 +57,21 @@
 
   <div>
     <div class="w-full h-96 mt-20 bg-gray-600">
-      <%if(img){%>
-      <img class="object-cover w-full h-full" src="IMG_0292.png" alt="" />
+      <%if(coverImg){%>
+      <img class="object-cover w-full h-full" src="data:image/png;base64,<%=coverImg%>" alt="" />
       <%}else{%>
       <div class="grid place-items-center w-full h-full">
-        <form action="/WalkerProfile" method="POST" id="myForm">
+        <form action="/WalkerProfile" method="POST" enctype="multipart/form-data" id="coverImg">
           <div class="relative">
             <input
               type="file"
-              name="image"
+              name="coverImg"
               id="image"
               class="sr-only"
-              onchange="document.getElementById('myForm').submit();"
+              onchange="document.getElementById('coverImg').submit();"
             />
             <div
-              class="flex justify-center items-center gap-2 cursor-pointer bg-white py-2 px-4 text-white rounded"
+              class="flex justify-center items-center gap-2 cursor-pointer bg-white py-2 px-6 text-white rounded"
             >
               <img src="camera.png" alt="" class="w-8" />
               <label for="image" class="text-black cursor-pointer">
@@ -85,25 +84,160 @@
 
       <%}%>
     </div>
-    <div class="flex gap-9 w-1/2 m-auto">
-      <div class="relative bottom-5 z-10 w-2/5 text-center">
+    <div
+      class="flex gap-9 w-1/2 max-[1150px]:w-11/12 m-auto max-[675px]:grid max-[675px]:w-full max-[675px]:place-items-center"
+    >
+      <div class="relative bottom-5 z-10 w-2/5 text-center max-[675px]:w-3/5">
         <div class="">
           <div class="bg-white relative">
+            <%if(profile){%>
             <img
-              src="user.png"
+              src="data:image/png;base64,<%=profile%>"
               alt=""
-              class="w-32 relative bottom-16 bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
+              class="relative bottom-16 bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
             />
+            <%}else{%>
+            <div
+              class="flex items-center justify-center w-32 h-32 m-auto relative bottom-16"
+            >
+              <form action="/WalkerProfile" method="post" enctype="multipart/form-data" id="porfile">
+                <label
+                  for="dropzone-file"
+                  class="flex flex-col items-center justify-center w-32 h-32 border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                >
+                  <div class="flex flex-col items-center justify-center">
+                    <svg
+                      aria-hidden="true"
+                      class="w-10 h-10 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      ></path>
+                    </svg>
+                    <p class="text-sm text-zinc-500">Upload a Profile</p>
+                  </div>
+                  <input
+                name="profile"
+                id="dropzone-file"
+                type="file"
+                accept="image/*"
+                class="hidden profilePic"
+                onchange="document.getElementById('porfile').submit();"
+              />
+                  
+                </label>
+                
+              </form>
+            </div>
+            <%}%>
           </div>
+          
         </div>
         <div class="flex justify-between items-center">
           <div class="grid justify-center items-center gap-2 text-left">
-            <div>Full Name</div>
-            <div>Address</div>
+            <div class="name"><%=name%></div>
+            <div class="">
+              <form action="/walkerProfile" method="POST">
+                <input
+                  type="text"
+                  id="first_name"
+                  class="nameInput mb-1 hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Full Name"
+                  name="fullName"
+                  required
+                />
+                <button
+                  class="submitBtn hidden px-3 py-1 bg-white text-emerald-500 border border-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200"
+                >
+                  submit
+                </button>
+              </form>
+            </div>
+            <%if(!address){%>
+            <div>
+              <form action="/walkerProfile" method="POST" id="address">
+                <select
+                  name="address"
+                  class="addressList bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-neutral-700 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-blue-500"       
+                  required
+                >
+                  <option value="" selected="selected">Select a State</option>
+                  <option value="Alabama">Alabama</option>
+                  <option value="Alaska">Alaska</option>
+                  <option value="Arizona">Arizona</option>
+                  <option value="Arkansas">Arkansas</option>
+                  <option value="California">California</option>
+                  <option value="Colorado">Colorado</option>
+                  <option value="Connecticut">Connecticut</option>
+                  <option value="Delaware">Delaware</option>
+                  <option value="District Of Columbia">
+                    District Of Columbia
+                  </option>
+                  <option value="Florida">Florida</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Hawaii">Hawaii</option>
+                  <option value="Idaho">Idaho</option>
+                  <option value="Illinois">Illinois</option>
+                  <option value="Indiana">Indiana</option>
+                  <option value="Iowa">Iowa</option>
+                  <option value="Kansas">Kansas</option>
+                  <option value="Kentucky">Kentucky</option>
+                  <option value="Louisiana">Louisiana</option>
+                  <option value="Maine">Maine</option>
+                  <option value="Maryland">Maryland</option>
+                  <option value="Massachusetts">Massachusetts</option>
+                  <option value="Michigan">Michigan</option>
+                  <option value="Minnesota">Minnesota</option>
+                  <option value="Mississippi">Mississippi</option>
+                  <option value="Missouri">Missouri</option>
+                  <option value="Montana">Montana</option>
+                  <option value="Nebraska">Nebraska</option>
+                  <option value="Nevada">Nevada</option>
+                  <option value="New Hampshire">New Hampshire</option>
+                  <option value="ew Jersey">New Jersey</option>
+                  <option value="New Mexico">New Mexico</option>
+                  <option value="New York">New York</option>
+                  <option value="North Carolina">North Carolina</option>
+                  <option value="North Dakota">North Dakota</option>
+                  <option value="Ohio">Ohio</option>
+                  <option value="Oklahoma">Oklahoma</option>
+                  <option value="Oregon">Oregon</option>
+                  <option value="Pennsylvania">Pennsylvania</option>
+                  <option value="Rhode Island">Rhode Island</option>
+                  <option value="South Carolina">South Carolina</option>
+                  <option value="South Dakota">South Dakota</option>
+                  <option value="Tennessee">Tennessee</option>
+                  <option value="Texas">Texas</option>
+                  <option value="Utah">Utah</option>
+                  <option value="Vermont">Vermont</option>
+                  <option value="Virginia">Virginia</option>
+                  <option value="Washington">Washington</option>
+                  <option value="West Virginia">West Virginia</option>
+                  <option value="Wisconsin">Wisconsin</option>
+                  <option value="Wyoming">Wyoming</option>
+                </select>
+                <button
+              class="addressBtn hidden px-6 py-1 mt-2 bg-whtie border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200 font-bold rounded-sm"
+               
+              >
+              Submit
+            </button>
+              </form>
+            </div>
+            <%}else{%>
+            <div><%=address%></div>
+            <%}%>
           </div>
           <div>
             <button
-              class="px-8 py-2 bg-whtie border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200 font-bold rounded-sm"
+              class="nameEdit px-8 py-2 bg-whtie border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200 font-bold rounded-sm"
             >
               Edit
             </button>
@@ -131,13 +265,30 @@
             class="font-bold text-zinc-600 text-lg mb-2 border-b border-zinc-300"
           >
             Descriptions
+            <button type="" class="editDescription">
+              <i class="fa-regular fa-pen-to-square ml-2"></i>
+            </button>
           </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi, est.
-            Dignissimos enim odio facere rerum magni illo, voluptas, facilis
-            nobis ab reiciendis perferendis repellendus laborum esse in eveniet
-            sint. Soluta?
-          </p>
+          <p class="descriptionsText"><%=description%></p>
+
+          <form
+            action="/WalkerProfile"
+            method="POST"
+            class="description hidden grid gap-4"
+          >
+            <textarea
+              name="description"
+              id="message"
+              rows="4"
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Write a description..."
+            ></textarea>
+            <button
+              class="px-6 py-2 bg-whtie border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200 font-bold rounded-sm"
+            >
+              Submit
+            </button>
+          </form>
         </div>
         <div>
           <p

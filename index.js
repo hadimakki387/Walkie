@@ -204,8 +204,6 @@ app.get("/dog-walker", (req, res) => {
 //the route that will display the dogs posts
 app.get("/posts", (req, res) => {
   
-    console.log(req.session)
-  
     if(req.query.dogBreed){
       const dog = req.query.dogBreed
       walkingPost.find({dogBreed:dog})
@@ -230,9 +228,30 @@ app.get("/posts", (req, res) => {
     
 });
 
-app.get('/WalkerProfile',(req,res)=>{
-  let img
-  res.render('WalkerProfile',{img})
+app.get('/WalkerProfile',isLoggedIn,(req,res)=>{
+  const {id} = req.session.user
+  console.log(id)
+  DogWalker.findOne({id:id})
+    .then(foundWalker=>{
+      if(foundWalker){
+        let name = foundWalker.name
+        let coverImg =foundWalker.coverImg?Buffer.from(foundWalker.coverImg).toString('base64'):null 
+        let profile =foundWalker.profile?Buffer.from(foundWalker.profile).toString('base64'):null  
+        let description = foundWalker.description
+        let address = foundWalker.address
+
+        res.render('WalkerProfile',{profile,coverImg,description,name,address})
+      }else {
+        let coverImg 
+        let profile 
+        let description
+        let name 
+        let address
+        res.render('WalkerProfile',{profile,coverImg,description,name,address})
+      }
+      
+    })
+  
 })
 
 app.get('/logout', function(req, res) {
@@ -246,8 +265,61 @@ app.get('/logout', function(req, res) {
 });
 
 
-app.post('/WalkerProfile',(req,res)=>{
-  res.redirect('/WalkerProfile')
+app.post('/WalkerProfile',upload.fields([
+  { name: 'profile', maxCount: 1 },
+  { name: 'coverImg', maxCount: 1 }
+]),async(req,res)=>{
+  let {coverImg,profile,fullName,description,address} = req.body
+  let  id  = req.session.user.id
+
+  if(req.files.profile){
+    const profileBuffered = req.files['profile'][0].buffer
+    await DogWalker.findOneAndUpdate({id:id},{profile:profileBuffered})
+      .then(err=>{
+        if(err){
+         console.log(err) 
+        }        
+      })
+      res.redirect('/WalkerProfile')
+  }else if(req.files.coverImg){
+    const coverBuffered = req.files['coverImg'][0].buffer
+    await DogWalker.findOneAndUpdate({id:id},{coverImg:coverBuffered})
+      .then(err=>{
+        if(err){
+         console.log(err) 
+        }        
+      })
+      res.redirect('/WalkerProfile')
+  } else if(fullName){
+    await DogWalker.findOneAndUpdate({id:id},{name:fullName})
+      .then(err=>{
+        if(err){
+         console.log(err) 
+        }        
+      })
+      res.redirect('/WalkerProfile')
+  }else if(description){
+
+    await DogWalker.findOneAndUpdate({id:id},{description:description})
+      .then(err=>{
+        if(err){
+         console.log(err) 
+        }        
+      })
+      res.redirect('/WalkerProfile')
+  }else if(address){
+    await DogWalker.findOneAndUpdate({id:id},{address:address})
+      .then(err=>{
+        if(err){
+         console.log(err) 
+        }        
+      })
+      res.redirect('/WalkerProfile')
+  }
+  
+  
+    
+  
 })
 //recieved the data from the form of adding pic
 app.post("/home", multer().single("profileImg"), (req, res) => {
@@ -438,7 +510,6 @@ app.post(
     console.log(id)
 
     const { address, dogName, dogBreed, DogDescription } = req.body;
-    console.log(name)
     const imgBuffered = req.file.buffer;
 
     const walkPost = new walkingPost({

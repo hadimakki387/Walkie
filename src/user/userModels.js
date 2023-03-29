@@ -26,9 +26,10 @@ const dogWalkerSchema = new mongoose.Schema({
   address: String,
   age: Number,
   id: String,
-  descriptions:String,
+  description:String,
   profile:Buffer,
   coverImg:Buffer,
+  reveiw:String,
   availability: [String],
   specialSkills: [String],
 });

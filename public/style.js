@@ -137,4 +137,23 @@ $('.profile').click(()=>{
   $('.slider').toggleClass('hidden')
 })
 
+$('.editDescription').click(()=>{
+  $('.description').toggleClass('hidden')
+  $('.descriptionsText').toggleClass('hidden')
+})
+
+$('.nameEdit').click(()=>{
+  $('.nameInput').toggleClass('hidden')
+  $('.name').toggleClass('hidden')
+  $('.submitBtn').toggleClass('hidden')
+})
+
+$('.addressList').click(()=>{
+  $('.addressBtn').removeClass('hidden')
+})
+
+$('.profilePic').click(()=>{
+  $('.profileSubmitBtn').removeClass('hidden')
+})
+
 console.log("style.js working")
