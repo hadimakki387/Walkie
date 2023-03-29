@@ -156,4 +156,9 @@ $('.profilePic').click(()=>{
   $('.profileSubmitBtn').removeClass('hidden')
 })
 
+$('.EditableProfImg').hover(()=>{
+  $('.editProfile').toggleClass('hidden ')
+  $('.profilePic').toggleClass('brightness-75 ')
+})
+
 console.log("style.js working")

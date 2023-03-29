@@ -202,14 +202,25 @@ app.get("/dog-walker", (req, res) => {
 });
 
 //the route that will display the dogs posts
-app.get("/posts", (req, res) => {
+app.get("/posts",isLoggedIn, (req, res) => {
+  const {id} = req.session.user
   
     if(req.query.dogBreed){
       const dog = req.query.dogBreed
       walkingPost.find({dogBreed:dog})
         .then(foundPosts=>{
           const postsCount = foundPosts.filter(posts=>posts.availability===true).length;
-          res.render("posts",{foundPosts,postsCount});
+          DogWalker.findOne({id:id})
+            .then(foundWalker=>{
+              let profile =foundWalker.profile?Buffer.from(foundWalker.profile).toString('base64'):null  
+              res.render("posts",{foundPosts,postsCount,profile});
+            })
+            .catch(err=>{
+              if(err){
+                console.log(err)
+              }
+            })
+          
         })
         .catch(err=>{
           console.log(err)
@@ -218,7 +229,16 @@ app.get("/posts", (req, res) => {
       walkingPost.find()
     .then(foundPosts=>{
       const postsCount = foundPosts.filter(posts=>posts.availability===true).length;
-      res.render("posts",{foundPosts,postsCount});
+      DogWalker.findOne({id:id})
+      .then(foundWalker=>{
+        let profile =foundWalker.profile?Buffer.from(foundWalker.profile).toString('base64'):null  
+        res.render("posts",{foundPosts,postsCount,profile});
+      })
+      .catch(err=>{
+        if(err){
+          console.log(err)
+        }
+      })
     })
     .catch(err=>{
       console.log(err)
@@ -269,58 +289,38 @@ app.post('/WalkerProfile',upload.fields([
   { name: 'profile', maxCount: 1 },
   { name: 'coverImg', maxCount: 1 }
 ]),async(req,res)=>{
-  let {coverImg,profile,fullName,description,address} = req.body
+  let {fullName,description,address} = req.body
   let  id  = req.session.user.id
+ console.log(req.files)
 
-  if(req.files.profile){
+  if(req.files && req.files.profile){
     const profileBuffered = req.files['profile'][0].buffer
     await DogWalker.findOneAndUpdate({id:id},{profile:profileBuffered})
-      .then(err=>{
-        if(err){
-         console.log(err) 
-        }        
-      })
       res.redirect('/WalkerProfile')
-  }else if(req.files.coverImg){
+  }else if(req.files && req.files.coverImg){
+    
     const coverBuffered = req.files['coverImg'][0].buffer
     await DogWalker.findOneAndUpdate({id:id},{coverImg:coverBuffered})
-      .then(err=>{
-        if(err){
-         console.log(err) 
-        }        
-      })
+      
       res.redirect('/WalkerProfile')
   } else if(fullName){
     await DogWalker.findOneAndUpdate({id:id},{name:fullName})
-      .then(err=>{
-        if(err){
-         console.log(err) 
-        }        
-      })
+      
       res.redirect('/WalkerProfile')
   }else if(description){
 
     await DogWalker.findOneAndUpdate({id:id},{description:description})
-      .then(err=>{
-        if(err){
-         console.log(err) 
-        }        
-      })
+      
       res.redirect('/WalkerProfile')
   }else if(address){
     await DogWalker.findOneAndUpdate({id:id},{address:address})
-      .then(err=>{
-        if(err){
-         console.log(err) 
-        }        
-      })
+      
       res.redirect('/WalkerProfile')
   }
-  
-  
-    
-  
 })
+
+
+
 //recieved the data from the form of adding pic
 app.post("/home", multer().single("profileImg"), (req, res) => {
   const { user } = req.session;
