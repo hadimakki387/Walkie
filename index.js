@@ -155,7 +155,7 @@ app.get("/home", isLoggedIn, async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-
+    
     res.render("dashboard", { img, name });
   } else {
     const { user } = req.session;
@@ -183,7 +183,27 @@ app.get("/home", isLoggedIn, async (req, res) => {
             });
         }
 
-        res.render("dashboard", { img: imageSrc, name });
+      // check if there is a user that requested for the post this user posted
+       await walkingPost.findOne({id:id})
+        .then(foundPost=>{
+          if(foundPost){
+            const walkerId = foundPost.submittedBy
+            console.log(walkerId)
+            DogWalker.findOne({id:walkerId})
+              .then(foundwalker=>{
+                  res.render("dashboard", { img: imageSrc, name,foundwalker,foundPost });
+              })
+              .catch(err=>{
+                console.log(err)
+              })
+          }else{
+            let foundPost
+            let foundwalker
+            res.render("dashboard", { img: imageSrc, name ,foundPost,foundwalker});
+          }
+      })
+
+        
       } else {
         res.redirect("/signUp?error=account-not-existing");
       }
@@ -204,7 +224,6 @@ app.get("/dog-walker", (req, res) => {
 //the route that will display the dogs posts
 app.get("/posts",isLoggedIn, (req, res) => {
   const {id} = req.session.user
-  
     if(req.query.dogBreed){
       const dog = req.query.dogBreed
       walkingPost.find({dogBreed:dog})
@@ -212,8 +231,13 @@ app.get("/posts",isLoggedIn, (req, res) => {
           const postsCount = foundPosts.filter(posts=>posts.availability===true).length;
           DogWalker.findOne({id:id})
             .then(foundWalker=>{
-              let profile =foundWalker.profile?Buffer.from(foundWalker.profile).toString('base64'):null  
-              res.render("posts",{foundPosts,postsCount,profile});
+              if(foundWalker.profile){
+                let profile =foundWalker.profile?Buffer.from(foundWalker.profile).toString('base64'):null  
+                res.render("posts",{foundPosts,postsCount,profile});
+              }else{
+                res.render("posts",{foundPosts,postsCount});
+              }
+              
             })
             .catch(err=>{
               if(err){
@@ -291,8 +315,8 @@ app.post('/WalkerProfile',upload.fields([
 ]),async(req,res)=>{
   let {fullName,description,address} = req.body
   let  id  = req.session.user.id
- console.log(req.files)
 
+  
   if(req.files && req.files.profile){
     const profileBuffered = req.files['profile'][0].buffer
     await DogWalker.findOneAndUpdate({id:id},{profile:profileBuffered})
@@ -386,7 +410,8 @@ app.post("/dog-walker", async (req, res) => {
 app.post('/posts',(req,res)=>{
   console.log(req.body.id);
   const id=req.body.id
-  walkingPost.findOneAndUpdate({id:id},{availability:false})
+  console.log(id)
+  walkingPost.findOneAndUpdate({id:id},{availability:false,submittedBy:req.session.user.id})
     .then(err=>{
       console.log(err)
     })

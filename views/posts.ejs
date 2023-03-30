@@ -129,7 +129,8 @@
       </div>
     </div>
 
-    <%foundPosts.forEach(foundPost=>{%> <%const img =foundPost.img%> <%const
+    <%foundPosts.forEach(foundPost=>{%> 
+    <%const img =foundPost.img%> <%const
     base64Image = Buffer.from(img).toString("base64");%> <%const imgF =
     "data:image/png;base64,"+base64Image%>
     <%if(foundPost.availability===true){%>
