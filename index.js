@@ -40,7 +40,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Connect to MongoDB database
-mongoose.connect("mongodb://127.0.0.1:27017/walkie");
+const mongodbUri = process.env.MONGO_URI;
+const PORT = process.env.PORT || 4000;
+
+mongoose.connect(mongodbUri, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+ 
+})
+  .then(() => {
+    console.log('MongoDB connected successfully!');
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT} `);
+    });
+  })
+  .catch((error) => {
+    console.log(`MongoDB connection error: ${error}`);
+  });
 
 // Middleware function to check if user is authenticated
 function isLoggedIn(req, res, next) {
@@ -137,6 +153,7 @@ app.get("/home", isLoggedIn, async (req, res) => {
     let img = req.user.photos[0].value;
     let email = req.user.emails[0].value;
     let id = req.user.id;
+    let  foundPost
 
     const dogOwner = new DogOwner({
       Fname: Fname,
@@ -156,7 +173,7 @@ app.get("/home", isLoggedIn, async (req, res) => {
         console.log(err);
       });
     
-    res.render("dashboard", { img, name });
+    res.render("dashboard", { img, name,foundPost });
   } else {
     const { user } = req.session;
     const { name, id, email, img } = user;
@@ -308,6 +325,22 @@ app.get('/logout', function(req, res) {
   });
 });
 
+app.get('/profile',(req,res)=>{
+  let coverImg 
+  let profile 
+  let description
+  let name 
+  let address
+  DogWalker.findOne({id:req.query.id})
+  .then(foundWalker=>{
+    if(foundWalker){
+      res.render('profileWhenVisited',{foundWalker})
+    }else{
+      res.render('profileWhenVisited',{profile,coverImg,description,name,address})
+    }
+  })
+  
+})
 
 app.post('/WalkerProfile',upload.fields([
   { name: 'profile', maxCount: 1 },
