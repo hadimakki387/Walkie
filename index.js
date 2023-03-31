@@ -100,7 +100,7 @@ app.get("/signUp", async (req, res) => {
 
   if (req.isAuthenticated()) {
     const id = req.user.id;
-    DogOwner.findOne({ id: id }).then((foundDogOwner) => {
+    await DogOwner.findOne({ id: id }).then((foundDogOwner) => {
       if (foundDogOwner) {
         res.redirect("/home");
       } else {
@@ -113,7 +113,7 @@ app.get("/signUp", async (req, res) => {
           id: id,
         });
 
-        DogOwner.findOne({ id: id })
+        await DogOwner.findOne({ id: id })
           .then((foundOwnrer) => {
             if (!foundOwnrer) {
               dogOwner.save();
@@ -202,11 +202,11 @@ app.get("/home", isLoggedIn, async (req, res) => {
 
       // check if there is a user that requested for the post this user posted
        await walkingPost.findOne({id:id})
-        .then(foundPost=>{
-          if(foundPost){
+        .then(async foundPost=>{
+          if( foundPost){
             const walkerId = foundPost.submittedBy
             console.log(walkerId)
-            DogWalker.findOne({id:walkerId})
+            await DogWalker.findOne({id:walkerId})
               .then(foundwalker=>{
                   res.render("dashboard", { img: imageSrc, name,foundwalker,foundPost });
               })
@@ -239,14 +239,14 @@ app.get("/dog-walker", (req, res) => {
 });
 
 //the route that will display the dogs posts
-app.get("/posts",isLoggedIn, (req, res) => {
+app.get("/posts",isLoggedIn,async (req, res) => {
   const {id} = req.session.user
     if(req.query.dogBreed){
       const dog = req.query.dogBreed
-      walkingPost.find({dogBreed:dog})
-        .then(foundPosts=>{
+      await walkingPost.find({dogBreed:dog})
+        .then(async foundPosts=>{
           const postsCount = foundPosts.filter(posts=>posts.availability===true).length;
-          DogWalker.findOne({id:id})
+          await DogWalker.findOne({id:id})
             .then(foundWalker=>{
               if(foundWalker.profile){
                 let profile =foundWalker.profile?Buffer.from(foundWalker.profile).toString('base64'):null  
@@ -268,7 +268,7 @@ app.get("/posts",isLoggedIn, (req, res) => {
           console.log(err)
         })
     }else{
-      walkingPost.find()
+    await walkingPost.find()
     .then(foundPosts=>{
       const postsCount = foundPosts.filter(posts=>posts.availability===true).length;
       DogWalker.findOne({id:id})
@@ -290,10 +290,10 @@ app.get("/posts",isLoggedIn, (req, res) => {
     
 });
 
-app.get('/WalkerProfile',isLoggedIn,(req,res)=>{
+app.get('/WalkerProfile',isLoggedIn,async (req,res)=>{
   const {id} = req.session.user
   console.log(id)
-  DogWalker.findOne({id:id})
+  await DogWalker.findOne({id:id})
     .then(foundWalker=>{
       if(foundWalker){
         let name = foundWalker.name
@@ -326,13 +326,13 @@ app.get('/logout', function(req, res) {
   });
 });
 
-app.get('/profile',(req,res)=>{
+app.get('/profile',async (req,res)=>{
   let coverImg 
   let profile 
   let description
   let name 
   let address
-  DogWalker.findOne({id:req.query.id})
+  await DogWalker.findOne({id:req.query.id})
   .then(foundWalker=>{
     if(foundWalker){
       res.render('profileWhenVisited',{foundWalker})
@@ -380,11 +380,11 @@ app.post('/WalkerProfile',upload.fields([
 
 
 //recieved the data from the form of adding pic
-app.post("/home", multer().single("profileImg"), (req, res) => {
+app.post("/home", multer().single("profileImg"),async (req, res) => {
   const { user } = req.session;
   let { name, id, email, img } = user;
   const profImgBuffered = req.file.buffer;
-  DogOwner.findOneAndUpdate(
+  await DogOwner.findOneAndUpdate(
     { email: email },
     { profImg: profImgBuffered }
   ).then((err, document) => {
@@ -412,7 +412,7 @@ app.post("/dog-walker", async (req, res) => {
     id: id,
   });
 
-  DogWalker.findOne({ email: Email })
+  await DogWalker.findOne({ email: Email })
     .then((foundUser) => {
       if (foundUser) {
         req.session.user = {
@@ -439,15 +439,15 @@ app.post("/dog-walker", async (req, res) => {
   res.redirect("/posts");
 });
 
-app.post('/posts',(req,res)=>{
+app.post('/posts',async (req,res)=>{
   
   const id=req.body.id
   console.log(id)
-  walkingPost.findOneAndUpdate({id:id},{availability:false,submittedBy:req.session.user.id})
+  await walkingPost.findOneAndUpdate({id:id},{availability:false,submittedBy:req.session.user.id})
     .then(err=>{
       console.log(err)
     })
-  DogOwner.findOneAndUpdate({id:req.session.user.id},{notification:true})
+  await DogOwner.findOneAndUpdate({id:req.session.user.id},{notification:true})
   .then(err=>{
     console.log(err)
   })
@@ -536,7 +536,7 @@ app.post("/signUp", async (req, res) => {
     password: hashedPassword,
   });
 
-  DogOwner.findOne({ email: email })
+  await DogOwner.findOne({ email: email })
     .then((foundOwner) => {
       if (!foundOwner) {
         dogOwner.save();
@@ -560,7 +560,7 @@ app.post(
   "/home/walk-your-dog",
   isLoggedIn,
   multer().single("image"),
-  (req, res) => {
+  async (req, res) => {
     // Handles posting walk data
     const id=req.user?req.user.id:req.session.user.id
     const name = req.user?req.user.displayName:req.session.user.name
@@ -580,7 +580,7 @@ app.post(
       img: imgBuffered, // Set image with uploaded file converted to base64 format string
     });
 
-    walkingPost
+    await walkingPost
       .findOne({ id: id }) // Searches for an existing post by user ID
       .then((foundPost) => {
         if (foundPost) {
