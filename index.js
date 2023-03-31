@@ -100,7 +100,7 @@ app.get("/signUp", async (req, res) => {
 
   if (req.isAuthenticated()) {
     const id = req.user.id;
-    await DogOwner.findOne({ id: id }).then((foundDogOwner) => {
+    await DogOwner.findOne({ id: id }).then(async(foundDogOwner) => {
       if (foundDogOwner) {
         res.redirect("/home");
       } else {
