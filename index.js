@@ -252,7 +252,8 @@ app.get("/posts",isLoggedIn, (req, res) => {
                 let profile =foundWalker.profile?Buffer.from(foundWalker.profile).toString('base64'):null  
                 res.render("posts",{foundPosts,postsCount,profile});
               }else{
-                res.render("posts",{foundPosts,postsCount});
+                let profile
+                res.render("posts",{foundPosts,postsCount,profile});
               }
               
             })
@@ -392,8 +393,6 @@ app.post("/home", multer().single("profileImg"), (req, res) => {
     }
   });
 
-  console.log(email);
-  console.log(req.file.buffer);
   res.redirect("/home");
 });
 
@@ -441,7 +440,7 @@ app.post("/dog-walker", async (req, res) => {
 });
 
 app.post('/posts',(req,res)=>{
-  console.log(req.body.id);
+  
   const id=req.body.id
   console.log(id)
   walkingPost.findOneAndUpdate({id:id},{availability:false,submittedBy:req.session.user.id})
