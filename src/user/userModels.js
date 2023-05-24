@@ -42,7 +42,7 @@ const walkingPostSchema = new mongoose.Schema({
   dogBreed: String,
   address: String,
   descriptions:String,
-  img: Buffer,
+  img: String,
   password: String,
   availability:Boolean,
   submittedBy:String,

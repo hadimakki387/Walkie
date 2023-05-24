@@ -130,15 +130,12 @@
     </div>
 
     <%foundPosts.forEach(foundPost=>{%> 
-    <%const img =foundPost.img%> <%const
-    base64Image = Buffer.from(img).toString("base64");%> <%const imgF =
-    "data:image/png;base64,"+base64Image%>
     <%if(foundPost.availability===true){%>
     <div
       class="w-[100%] grid border border-neutral-300 rounded-sm p-4 gap-2 mb-4"
     >
       <img
-        src="<%=imgF%>"
+        src="uploads/<%=foundPost.img%>"
         alt=""
         class="w-32 relative justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
       />

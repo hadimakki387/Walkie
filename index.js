@@ -8,7 +8,7 @@ const session = require("express-session");
 require("dotenv").config();
 const path = require('path')
 const upload = require('./middleware/multer')
- const isLoggedIn = require('./middleware/isLoggedIn')
+const isLoggedIn = require('./middleware/isLoggedIn')
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
@@ -79,6 +79,9 @@ app.use('/walkerProfile',walkerProfile)
 const dashboard = require('./routes/dashboard')
 app.use('/dashboard',dashboard);
 
+const walkYourDog = require('./routes/walkYourDogs')
+app.use('/walk-your-dog',walkYourDog)
+
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -93,11 +96,6 @@ app.get(
 );
 
 
-
-// Render form for creating a walking post
-app.get("/walk-your-dog", (req, res) => {
-  res.render("walkForm");
-});
 
 // Render sign-up page for dog walkers
 app.get("/dog-walker", (req, res) => {
@@ -186,66 +184,6 @@ app.get('/profile',async (req,res)=>{
   
 })
 
-app.post('/WalkerProfile', upload.fields([
-  { name: 'profile', maxCount: 1 },
-  { name: 'coverImg', maxCount: 1 }
-]), async (req, res) => {
-  let { fullName, description, address } = req.body;
-  let id = req.session.user.id;
-
-  if (req.files && req.files.profile) {
-    const profile = req.files['profile'][0].filename;
-    const dogWalker = await DogWalker.findOne({ id: id });
-  
-    if (dogWalker && dogWalker.profile && dogWalker.profile !== profile) {
-      const filePath = `public/uploads/${dogWalker.profile}`;
-      fs.unlink(filePath, async (err) => {
-        if (err) {
-          console.log(err);
-        }
-  
-        await DogWalker.findOneAndUpdate({ id: id }, { profile: profile });
-        res.redirect('/WalkerProfile');
-      });
-    } else if (!dogWalker || !dogWalker.profile) {
-      await DogWalker.findOneAndUpdate({ id: id }, { profile: profile });
-      res.redirect('/WalkerProfile');
-    } else {
-      res.redirect('/WalkerProfile');
-    }
-  } else if (req.files && req.files.coverImg) {
-    const cover = req.files['coverImg'][0].filename;
-    await DogWalker.findOneAndUpdate({ id: id }, { coverImg: cover });
-    res.redirect('/WalkerProfile');
-  } else if (fullName) {
-    await DogWalker.findOneAndUpdate({ id: id }, { name: fullName });
-    res.redirect('/WalkerProfile');
-  } else if (description) {
-    await DogWalker.findOneAndUpdate({ id: id }, { description: description });
-    res.redirect('/WalkerProfile');
-  } else if (address) {
-    await DogWalker.findOneAndUpdate({ id: id }, { address: address });
-    res.redirect('/WalkerProfile');
-  }
-});
-
-
-
-//recieved the data from the form of adding pic
-app.post("/dashboard", upload.single("profileImg"), async (req, res) => {
-  const { user } = req.session;
-  let { name, id, email, img } = user;
-  const profImg = req.file.filename; // Get the path of the uploaded file
-
-  await DogOwner.findOneAndUpdate(
-    { email: email },
-    { profImg: profImg } // Save the file path in the profImg field
-  ).catch((err) => {
-    console.log(err);
-  });
-
-  res.redirect("/dashboard");
-});
 
 //recieved data from the dog walker form
 app.post("/dog-walker", async (req, res) => {
@@ -342,50 +280,6 @@ app.post("/signUp", async (req, res) => {
     });
 });
 
-app.post(
-  "/walk-your-dog",
-  isLoggedIn,
-  upload.single("image"),
-  async (req, res) => {
-    // Handles posting walk data
-    const id=req.user?req.user.id:req.session.user.id
-    const name = req.user?req.user.displayName:req.session.user.name
-
-    const { address, dogName, dogBreed, DogDescription } = req.body;
-    const dogImage = req.file.filename;
-
-    const walkPost = new walkingPost({
-      id: id,
-      ownerName: name,
-      dogName: dogName,
-      dogBreed: _.capitalize(dogBreed),
-      address: address,
-      descriptions: DogDescription,
-      availability:true,
-      img: dogImage, // Set image with uploaded file converted to base64 format string
-    });
-
-    await walkingPost
-      .findOne({ id: id }) // Searches for an existing post by user ID
-      .then((foundPost) => {
-        if (foundPost) {
-          // Post exists so redirect back to homepage
-          setTimeout(() => {
-            res.redirect("/dashboard");
-          }, 2000);
-        } else {
-          // Save new post item and redirect
-          walkPost.save();
-          setTimeout(() => {
-            res.redirect("/dashboard");
-          }, 2000);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-);
 
 //in production 4001
 const port = 3000
