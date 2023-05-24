@@ -17,13 +17,14 @@ const { devNull } = require("os");
 const _ = require('lodash');
 require("./src/config/google");
 require("./src/config/passport");
+const Home = require('./routes/home')
+const signIn = require('./routes/signIn');
+const connectToDatabase = require("./src/db");
+
+
 
 // Set view engine
 app.set("view engine", "ejs");
-
-// Serve static files from public directory
-app.use(express.static("public"));
-app.use(express.json());
 
 // Use body parser middleware and session management
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,23 +36,30 @@ app.use(
   })
 );
 
+// Serve static files from public directory
+app.use(express.static("public"));
+app.use(express.json());
+app.use('/',Home);
+app.use('/signIn',signIn)
+
+
+
+
 // Enable passport initialization and session handling
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Connect to MongoDB database
-const mongodbUri = process.env.MONGO_URI;
-const PORT = process.env.PORT || 4000;
+// Set the desired environment ('local' or 'production')
+const environment = 'local';
 
-mongoose.connect(mongodbUri, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
- 
-})
+// Call the connectToDatabase function with the environment
+connectToDatabase(environment)
   .then(() => {
-    console.log('MongoDB connected successfully!');
+    // Start your server or perform other operations
+    const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT} `);
+      console.log(`mongodb is running on port ${PORT}`);
     });
   })
   .catch((error) => {
@@ -67,27 +75,10 @@ function isLoggedIn(req, res, next) {
   }
 }
 
-// Render initial page with no user information
-app.get("/", (req, res) => {
-  let name = null;
-  let id = null;
-  let img = null;
-  res.render("home", { name: name, img: img });
-});
+
 
 // Render sign-in page
-app.get("/signIn", (req, res) => {
-  //handling the error from the paameters is existed
-  let error;
-  if (req.query.error === "account-existing") {
-    error = "already have an account please SignIn to get access";
-  } else if (req.query.error === "wrong-credentials") {
-    error = "Wrong Password or E-mail, please try again";
-  }else if(req.query.error === "found-account-google"){
-    error = "You already Signed up using google. Use google sign In to access"
-  }
-  res.render("signIn", { error: error });
-});
+
 
 // After successful sign-in, render sign-up page if it is a new user or
 // redirect to dashboard if user already exists
@@ -454,71 +445,7 @@ app.post('/posts',async (req,res)=>{
 
 })
 
-//recieving the data from the user and checking them in the database
-app.post("/signIn", async (req, res) => {
-  const { email, password } = req.body;
 
-  await DogOwner.findOne({ email: email })
-    .then(async (foundOwner) => {
-      if (foundOwner) {
-
-        //check if the user is from google oAuth or not
-        if(!foundOwner.password){
-          //if he is 
-          res.redirect("signIn?error=found-account-google");
-        }else{
-          //if he is not
-          const isMatch = await bcrypt.compare(password, foundOwner.password);
-          if (isMatch) {
-          req.session.user = {
-            name: foundOwner.name,
-            id: foundOwner.id,
-            img: foundOwner.profImg,
-            email: foundOwner.email,
-          };
-          res.redirect("/home");
-        } else {
-          res.redirect("signIn?error=wrong-credentials");
-        }
-        }
-        
-      } else {
-        await DogWalker.findOne({ email: email })
-          .then(async (foundWalker) => {
-            if (foundWalker) {
-              if(!foundWalker.password){
-                res.redirect("signIn?error=found-account-google");
-              }else{
-                const isMatch = await bcrypt.compare(
-                password,
-                foundWalker.password
-              );
-              if (isMatch) {
-                req.session.user = {
-                  name: foundWalker.name,
-                  id: foundWalker.id,
-                  telNumber:foundWalker.telNumber,
-                  email:foundWalker.email
-                };
-                res.redirect("/posts");
-              } else {
-                res.redirect("signIn?error=Wrong-credentials");
-              }
-              }
-              
-            } else {
-              res.redirect("/signUp?error=account-not-existing");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
 
 //adding a account for the user and checking if it existed
 app.post("/signUp", async (req, res) => {
@@ -602,6 +529,8 @@ app.post(
   }
 );
 
-app.listen(4001, () => {
-  console.log("listening on port 3000");
+//in production 4001
+const port = 3000
+app.listen(port, () => {
+  console.log("listening on port " + port);
 });

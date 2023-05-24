@@ -53,9 +53,9 @@
 
 
 <!-- This is the sign in with email form -->
-<div class=" emailSignIn my-8 mx-16 hidden">
+<div class="emailSignIn my-8 mx-16 hidden">
   <button class="backBtn text-emerald-500 font-bold">Back</button>
-  <form action="/signIn" method="post">
+  <form action="/signIn" method="POST">
     <div class="grid justify-center">
     <div class="relative mb-3 xl:w-96">
       <input
@@ -99,7 +99,7 @@
         <p  class="password-warning text-red-600 text-sm "></p>
       </div>
     </div>
-    <button class="bg-emerald-500 py-4 rounded-lg hover:bg-emerald-400 transition duration-200">
+    <button type="submit" class="bg-emerald-500 py-4 rounded-lg hover:bg-emerald-400 transition duration-200">
       <p class="text-lg font-bold text-white">Continue</p>
     </button>
   </form>
