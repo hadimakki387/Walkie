@@ -1,5 +1,4 @@
 <%- include('header'); -%>
-
 <div
   class="w-1/2 m-auto mt-4 flex justify-start items-center gap-4 bg-white max-[900px]:w-[90%] max-[900px]:gap-2"
 >
@@ -17,7 +16,7 @@
     <div class="grid justify-center items-center m-auto gap-4">
       <%if(img){%>
       <img
-        src="<%=img%>"
+        src="uploads/<%=img%>"
         alt=""
         class="rounded-full object-contain h-32 w-32 m-auto max-[900px]:w-16 max-[900px]:h-16 bg-neutral-300"
       />
@@ -29,7 +28,7 @@
       <%}else{%>
       <form
         method="post"
-        action="/home"
+        action="/dashboard"
         enctype="multipart/form-data"
         class="grid justify-center items-center gap-2"
         id="ownerProf"
@@ -94,7 +93,7 @@
       <p class="text-5xl text-zinc-400 mb-4 max-[900px]:text-2xl">
         Want to walk your pet?
       </p>
-      <a href="/home/walk-your-dog">
+      <a href="/walk-your-dog">
         <div
           class="grid justify-center pb-4 items-center text-center hover:bg-neutral-300 hover:scale-105 transition duration-300 rounded-lg"
         >
@@ -116,16 +115,13 @@
     </div>
 
     <%if(foundPost){%>
-      <%const img =foundPost.img%> <%const
-    base64Image = Buffer.from(img).toString("base64");%> <%const imgF =
-    "data:image/png;base64,"+base64Image%>
       <div class="grid mt-8">
       
         <div
           class="w-[100%] grid border border-neutral-300 rounded-sm p-4 gap-2 mb-4"
         >
           <img
-            src="<%=imgF%>"
+            src="uploads/<%=img%>"
             alt=""
             class="relative justify-center items-center m-auto rounded-full h-32 w-32 object-contain max-[410px]:w-24 max-[410px]:h-24 "
           />
@@ -183,4 +179,8 @@
   
 </div>
 
+
+
 <%- include('footer'); -%>
+
+

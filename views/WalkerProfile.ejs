@@ -39,7 +39,7 @@
 
                 <%if(profile){%>
                 <img
-                  src="data:image/png;base64,<%=profile%>"
+                  src="uploads/<%=profile%>"
                   alt=""
                   class="bg-white cursor-pointer object-contain profile w-16 h-16 rounded-full"
                 />
@@ -60,7 +60,7 @@
       
       <img
         class="object-cover w-full h-full"
-        src="data:image/png;base64,<%=coverImg%>"
+        src="uploads/<%=coverImg%>"
         alt=""
       />
       <%}else{%>
@@ -119,7 +119,7 @@
                       class="editProfile EditableProfImg fa-regular fa-pen-to-square ml-2 text-white absolute hidden"
                     ></i>
                     <img
-                      src="data:image/png;base64,<%= profile %>"
+                      src="uploads/<%=profile%>"
                       alt=""
                       class="EditableProfImg bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
                     />

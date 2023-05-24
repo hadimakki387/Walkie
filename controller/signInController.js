@@ -12,21 +12,19 @@ const index = (req, res) => {
   } else if (req.query.error === 'found-account-google') {
     error = 'You already signed up using Google. Use Google Sign In to access.';
   }
-console.log('hello')
   res.render('signIn', { error: error });
   
 };
 
 const create = async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body)
     try {
       const foundOwner = await DogOwner.findOne({ email: email });
       if (foundOwner) {
         if (!foundOwner.password) {
           res.redirect("signIn?error=found-account-google");
         } else {
-          await handleUserAuthentication(password, foundOwner, req, res, "/home");
+          await handleUserAuthentication(password, foundOwner, req, res, "/dashboard");
         }
       } else {
         const foundWalker = await DogWalker.findOne({ email: email });
