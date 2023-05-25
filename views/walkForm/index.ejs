@@ -1,0 +1,52 @@
+<%- include('../components/header'); -%>
+
+<!-- the svg for the logo -->
+<div class="flex max-w-full justify-center items-center h-28">
+  <img src="walkie.png" alt="" class="w-48" />
+</div>
+
+<div class="w-1/2 flex justify-center items-center m-auto">
+  <form action="/walk-your-dog" method="post" enctype="multipart/form-data" class="walkForm">
+    <div class="grid gap-2 justify-center items-center">
+      <p
+        class="text-5xl text-zinc-400 font-bold text-center mb-8 max-[860px]:text-3xl max-[540px]:text-lg"
+      >
+        Please Fill The Following Information
+      </p>
+      <div class="flex justify-start items-start gap-4 w-full">
+        <div class="relative mb-3">
+          <%-include('statesDropList')-%>
+        </div>
+      </div>
+      <div class="flex justify-start items-start gap-4">
+        <%-include('nameInput')-%>
+      </div>
+      <div class="flex justify-start items-start gap-4">
+        <%-include('dogBreedInput')-%>
+      </div>
+
+      <div class="relative mb-3">
+        <textarea
+          name="DogDescription"
+          id="message"
+          rows="4"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Description"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-center w-full">
+        <%-include('imgInput')-%>
+      </div>
+
+      <button
+        class="btn bg-emerald-500 px-4 py-2 rounded-lg text-lg font-bold text-white hover:bg-emerald-400 transition duration-200 mt-8"
+        id="btn"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('../components/footer'); -%>

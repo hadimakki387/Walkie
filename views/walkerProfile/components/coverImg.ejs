@@ -1,0 +1,39 @@
+<div class="w-full h-96 mt-20 bg-gray-600">
+    <%if(coverImg){%>
+    
+    <img
+      class="object-cover w-full h-full"
+      src="uploads/<%=coverImg%>"
+      alt=""
+    />
+    <%}else{%>
+    <div class="grid place-items-center w-full h-full">
+      <form
+        action="/WalkerProfile"
+        method="POST"
+        enctype="multipart/form-data"
+        id="coverImg"
+      >
+        <div class="relative">
+          <input
+            type="file"
+            name="coverImg"
+            id="image"
+            class="sr-only"
+            onchange="document.getElementById('coverImg').submit();"
+          />
+          <div
+            class="flex justify-center items-center gap-2 cursor-pointer bg-white py-2 px-6 text-white rounded"
+          >
+            <img src="camera.png" alt="" class="w-8" />
+            <label for="image" class="text-black cursor-pointer">
+              Add Cover
+            </label>
+            <p>YOU CAN SET THIS FOR ONCE</p>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <%}%>
+  </div>

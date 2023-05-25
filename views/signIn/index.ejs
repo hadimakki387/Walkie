@@ -1,0 +1,73 @@
+<%- include('../components/header'); -%>
+
+<div class="grid w-1/4 justify-center items-center m-auto">
+
+  <!-- This is the first div with the background -->
+  <%- include('components/smallBanner') %>
+
+
+
+<!-- This is the title -->
+<div class="grid justify-center items-center text-center">
+  <p class="text-5xl font-bold text-zinc-500 max-[830px]:text-3xl">Sign In</p>
+  <p class="text-xl text-zinc-400 mt-4 max-[830px]:text-base" >Sign in to access your Wag! account.</p>
+</div>
+<!-- This is the title -->
+
+
+
+<!-- This is the sign in buttons area -->
+<div class="signInButtons grid justify-center items-center mt-6 gap-3">
+
+  <%- include('components/googleSignInButton') %>
+  
+  <%- include('components/emailSignIn') %>
+
+  <%if(error){%>
+    <p class="text-red-600 text-center font-bold w-[19rem] m-auto [830px]:text-base"><%=error%></p>
+  <%}%>
+  
+</div>
+
+<div class="newUser grid justify-center items-center gap-4 mt-4 text-center ">
+  <p class="text-lg text-zinc-500 max-[830px]:text-base">New user? <a href="/signUp" class="text-emerald-500">Sign up now</a></p>
+  <p class="text-lg text-zinc-500 max-[830px]:text-base">Are you a per Caregiver? <a href="" class="text-emerald-500">sign In</a></p>
+</div>
+<!-- This is the sign in buttons area -->
+
+
+
+
+<!-- This is the sign in with email form -->
+<div class="emailSignIn my-8 mx-16 hidden">
+  <button class="backBtn text-emerald-500 font-bold">Back</button>
+  <form action="/signIn" method="POST">
+    <div class="grid justify-center">
+
+    <%- include('components/email') %>
+    
+    <%- include('components/password') %>
+
+    <div class="flex justify-center">
+      <div class="relative mb-3 xl:w-96" data-te-input-wrapper-init>
+        <p  class="password-warning text-red-600 text-sm "></p>
+      </div>
+    </div>
+    <button type="submit" class="bg-emerald-500 py-4 rounded-lg hover:bg-emerald-400 transition duration-200">
+      <p class="text-lg font-bold text-white">Continue</p>
+    </button>
+  </form>
+</div>
+
+<div class="grid justify-center items-center gap-4 mt-4 text-center ">
+  <p class="text-lg text-zinc-500 max-[830px]:text-base">New user? <a href="" class="text-emerald-500">Sign up now</a></p>
+  <p class="text-lg text-zinc-500 max-[830px]:text-base">Are you a per Caregiver? <a href="/dog-walker" class="text-emerald-500">sign In</a></p>
+</div>
+<!-- This is the sign in with email form -->
+
+</div>
+
+
+
+
+<%- include('../components/footer'); -%>

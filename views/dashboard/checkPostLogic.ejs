@@ -1,0 +1,68 @@
+<%if(foundPost){%>
+    <div class="grid mt-8">
+      <div
+        class="w-[100%] grid border border-neutral-300 rounded-sm p-4 gap-2 mb-4"
+      >
+        <img
+          src="uploads/<%=foundPost.img%>"
+          alt=""
+          class="relative justify-center items-center m-auto rounded-full h-32 w-32 object-contain max-[410px]:w-24 max-[410px]:h-24"
+        />
+        <div class="flex justify-between items-center w-[100%] gap-4">
+          <div>
+            <p
+              class="max-[650px]:text-2xl max-[500px]:text-xl max-[410px]:text-lg text-3xl font-bold text-zinc-600"
+            >
+              <%=foundPost.dogBreed%>
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xl font-bold text-zinc-600">15$</p>
+          </div>
+        </div>
+
+        <div
+          class="max-[766px]:grid max-[766px]:m-auto max-[410px]:text-xs text-left flex justify-between items-center w-[100%]"
+        >
+          <div>
+            <p class="w-1/2"><%=foundPost.descriptions%></p>
+          </div>
+        </div>
+        <%if(foundwalker){%>
+        <div class="grid place-items-center">
+          <i
+            class="fa-sharp fa-regular fa-circle-check fa-4x text-emerald-500"
+          ></i>
+          <div class="text-center">
+            <p>Congrats you got a dog walker</p>
+            <p>
+              Check his profile
+              <a
+                href="/profile?name=<%=foundwalker.name%>&id=<%=foundwalker.id%>"
+                class="text-emerald-500 font-bold underline"
+                ><%=foundwalker.name%></a
+              >
+            </p>
+          </div>
+        </div>
+        <div class="flex justify-between items-center my-4">
+          <a
+            href="/approve-request"
+            class="bg-emerald-500 px-4 py-2 border border-emerald-500 text-white hover:bg-white hover:text-emerald-500 transition duration-200"
+            >Approve</a
+          >
+          <a
+            href="/decline-request"
+            class="bg-emerald-500 px-4 py-2 border border-emerald-500 text-white hover:bg-white hover:text-emerald-500 transition duration-200"
+            >decline</a
+          >
+        </div>
+        <%}else{%>
+        <div class="grid place-items-center">
+          <p class="mt-4">Wait for your dog walker</p>
+        </div>
+        <%}%>
+      </div>
+    </div>
+    <%}%>

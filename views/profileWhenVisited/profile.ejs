@@ -1,0 +1,25 @@
+<div class="bg-white relative">
+    <% if (foundWalker.profile) { %>
+     
+    <div class="m-auto profilePic relative bottom-16">
+      
+            <img
+              src="uploads/<%=foundWalker.profile%>"
+              alt=""
+              class="EditableProfImg bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
+            />
+          
+    
+    <% }else{%>
+    <div
+      class="flex items-center justify-center w-32 h-32 m-auto relative bottom-16"
+    >
+    <img
+    src="user.png"
+    alt=""
+    class="EditableProfImg bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
+  />
+    </div>
+    <%}%>
+  </div>
+</div>

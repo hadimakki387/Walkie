@@ -1,0 +1,33 @@
+<div class="m-auto profilePic relative bottom-16">
+    <form
+      action="/WalkerProfile"
+      method="post"
+      enctype="multipart/form-data"
+      id="profile"
+      class="profileEdit"
+    >
+      <label
+        for="dropzone-file"
+        class="flex flex-col z-10 items-center justify-center cursor-pointer"
+      >
+        <div class="z-10 flex flex-col items-center justify-center">
+          <i
+            class="editProfile EditableProfImg fa-regular fa-pen-to-square ml-2 text-white absolute hidden"
+          ></i>
+          <img
+            src="uploads/<%=profile%>"
+            alt=""
+            class="EditableProfImg bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
+          />
+        </div>
+        <input
+          id="dropzone-file"
+          type="file"
+          accept="image/*"
+          class="hidden profilePic"
+          onchange="document.getElementById('profile').submit();"
+          name="profile"
+        />
+      </label>
+    </form>
+  </div>

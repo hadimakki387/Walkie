@@ -1,5 +1,5 @@
 // This function is to creat slide animantion to the humburger menu on the mobile verision
-$("button.mobile-menu-button").click(function () {
+$("button.mobile-menu-button").on("click", () => {
   $(".mobile-menu").toggleClass("slide");
   if ($(".mobile-menu").hasClass("slide")) {
     $(".mobile-menu").slideDown();
@@ -9,7 +9,7 @@ $("button.mobile-menu-button").click(function () {
 });
 
 // This function is to give style to the links in the navbar whenever they are clicked
-$(".links").click(function () {
+$(".links").on("click", () => {
   $(".links")
     .not(this)
     .removeClass("text-emerald-500 border-b-4 border-emerald-500");
@@ -22,21 +22,21 @@ $(".links").click(function () {
 });
 
 // This function is to hide the signIn buttons in the signIn page and unhide the signIn by email form
-$(".email").click(() => {
+$(".email").on("click", () => {
   $(".signInButtons").addClass("hidden");
   $(".emailSignIn").removeClass("hidden");
   $(".newUser").addClass("hidden");
 });
 
 // This function is to unhide the signIn buttons in the signIn page and hide the signIn by email form
-$(".backBtn").click(() => {
+$(".backBtn").on("click", () => {
   $(".signInButtons").removeClass("hidden");
   $(".emailSignIn").addClass("hidden");
   $(".newUser").removeClass("hidden");
 });
 
 // This function is to creat slide animantion to the humburger menu on the mobile verision
-$(".homeBurger").click(() => {
+$(".homeBurger").on("click", () => {
   $(".leftSilder").toggleClass("slideIn ");
   $(".bgChange").toggleClass("brightness-50 blur-sm");
   if ($(".leftSilder").hasClass("slideIn")) {
@@ -109,7 +109,7 @@ $(".uploadProfile").on("click", () => {
 });
 
 $('.BTN').each(function(index, button) {
-  $(button).click(() => {
+  $(button).on("click", () => {
     $(button).text('request sent');
     $(button).css({
       'background-color': 'white',
@@ -133,32 +133,51 @@ function sendRequest(id) {
   });
 }
 
-$('.profile').click(()=>{
-  $('.slider').toggleClass('hidden')
-})
+$(document).on("click", (event) => {
+  const $profile = $('.profile');
+  const $slider = $('.slider');
 
-$('.editDescription').click(()=>{
+  // Check if the clicked element is .profile or its descendant
+  if (!$profile.is(event.target) && $profile.has(event.target).length === 0) {
+    // Check if the slider is not hidden
+    if (!$slider.hasClass('hidden')) {
+      $slider.addClass('hidden');
+    }
+  }
+});
+
+$('.profile').on("click", () => {
+  $('.slider').toggleClass('hidden');
+});
+
+
+$('.editDescription').on("click", () => {
   $('.description').toggleClass('hidden')
   $('.descriptionsText').toggleClass('hidden')
 })
 
-$('.nameEdit').click(()=>{
+$('.nameEdit').on("click", () => {
   $('.nameInput').toggleClass('hidden')
   $('.name').toggleClass('hidden')
   $('.submitBtn').toggleClass('hidden')
 })
 
-$('.addressList').click(()=>{
+$('.addressList').on("click", () => {
   $('.addressBtn').removeClass('hidden')
 })
 
-$('.profilePic').click(()=>{
+$('.profilePic').on("click", () => {
   $('.profileSubmitBtn').removeClass('hidden')
 })
 
-$('.EditableProfImg').hover(()=>{
+$('.EditableProfImg').on("hover", () => {
   $('.editProfile').toggleClass('hidden ')
   $('.profilePic').toggleClass('brightness-75 ')
 })
+
+
+$(".walkForm").on("submit", (event) => {
+  Swal.fire("Thank You!", "your request has been added", "success");
+});
 
 console.log("style.js working")

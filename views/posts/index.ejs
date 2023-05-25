@@ -1,0 +1,25 @@
+<%- include('../components/header'); -%>
+
+<div>
+  <div class="l">
+    <div class="fixed z-10 w-[100vw] top-0">
+      <%- include('navBar') %>
+    </div>
+  </div>
+
+  <%- include('categories') %>
+
+  <div class="w-2/3 grid items-center m-auto max-[766px]:mt-12">
+    <div class="max-w-full grid leading-loose text-3xl font-bold mt-4">
+      <p>Take a Walk</p>
+      <p class="relative bottom-6"><%=postsCount%> Dogs avalable</p>
+    </div>
+    <div>
+      <%- include('searchBar') %>
+    </div>
+
+    <%- include('postsLogic') %>
+  </div>
+
+  <%- include('../components/footer'); -%>
+</div>
