@@ -1,9 +1,9 @@
+const { session } = require("passport");
+
 const homeController = (req, res) => {
-  let name = null;
-  let id = null;
-  let img = null;
-  res.render("home/home", { name: name, img: img });
-  
+  const { name, img } = req.session.user || {}; // Use an empty object as default value
+  res.render("home/index", { name: name || "", img: img || "" });
 };
 
 module.exports = homeController;
+

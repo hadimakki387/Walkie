@@ -1,0 +1,91 @@
+<%- include('../components/header'); -%>
+
+<div>
+  <div class="">
+    <div class="fixed z-30 w-[100vw] top-0">
+      <%- include('components/navBar') %>
+    </div>
+  </div>
+
+  <div>
+    <%- include('components/coverImg') %>
+    <div
+      class="flex gap-9 w-1/2 max-[1150px]:w-11/12 m-auto max-[675px]:grid max-[675px]:w-full max-[675px]:place-items-center"
+    >
+      <div class="relative bottom-5 z-10 w-2/5 text-center max-[675px]:w-3/5">
+        <div class="">
+          <div class="bg-white relative">
+            <% if (profile) { %>
+
+            <%- include('components/existingprofileForm') %>
+            
+            <% }else{%>
+              <%- include('components/nonExistingprofileForm') %>
+            <%}%>
+          </div>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="grid justify-center items-center gap-2 text-left">
+            <div class="name"><%=name%></div>
+            <div class="">
+              <form action="/walkerProfile" method="POST">
+                <input
+                  type="text"
+                  id="first_name"
+                  class="nameInput mb-1 hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Full Name"
+                  name="fullName"
+                  required
+                />
+                <button
+                  class="submitBtn hidden px-3 py-1 bg-white text-emerald-500 border border-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200"
+                >
+                  submit
+                </button>
+              </form>
+            </div>
+            
+            <%if(!address){%>
+            <div>
+              <form action="/walkerProfile" method="POST" id="address">
+
+                <%- include('../walkForm/statesDropList') %>
+
+                <button
+                  class="addressBtn hidden px-6 py-1 mt-2 bg-whtie border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200 font-bold rounded-sm"
+                >
+                  Submit
+                </button>
+              </form>
+            </div>
+            <%}else{%>
+            <div><%=address%></div>
+            <%}%>
+
+          </div>
+          <div>
+            <button
+              class="nameEdit px-8 py-2 bg-whtie border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition duration-200 font-bold rounded-sm"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
+
+        <%- include('components/insights') %>
+
+      </div>
+
+      <div class="mt-4 w-3/5 grid gap-6">
+        <div class="">
+          <%- include('components/descriptionArea') %>
+        </div>
+        
+        <%- include('components/reviewsArea') %>
+
+      </div>
+    </div>
+  </div>
+
+  <%- include('../components/footer'); -%>
+</div>

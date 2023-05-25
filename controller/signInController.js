@@ -12,7 +12,7 @@ const index = (req, res) => {
   } else if (req.query.error === 'found-account-google') {
     error = 'You already signed up using Google. Use Google Sign In to access.';
   }
-  res.render('signIn', { error: error });
+  res.render('signIn/index', { error: error });
   
 };
 

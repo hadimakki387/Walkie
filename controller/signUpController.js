@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const index = async (req, res) => {
   if (req.query.error === "account-not-existing") {
-    return res.render("signUp", { error: "You do not have an account. Please Sign Up" });
+    return res.render("signUp/index", { error: "You do not have an account. Please Sign Up" });
   }
 
   if (req.isAuthenticated()) {
@@ -28,11 +28,11 @@ const index = async (req, res) => {
       res.redirect("/dashboard");
     } catch (error) {
       console.log(error);
-      res.render("signUp", { error: "An error occurred while creating your account" });
+      res.render("signUp/index", { error: "An error occurred while creating your account" });
     }
   } else {
     let error
-    res.render("signUp",{error});
+    res.render("signUp/index",{error});
   }
 };
 

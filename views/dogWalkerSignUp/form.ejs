@@ -1,0 +1,77 @@
+<form action="/dog-walker" method="post" class="max-[600px]:w-[100vw]">
+  <p
+    class="mt-6 text-center max-[600px]:w-[100vw] max-[600px]:text-sm max-[600px]:my-4 mb-4"
+  >
+    Please enter your name as it appears on your ID
+  </p>
+
+  <%- include('inputs/firstName') %> 
+  
+  <%- include('inputs/secondName') %> 
+
+  <%-include('inputs/email') %>
+
+  <div class="flex justify-center">
+    <div class="relative mb-3 xl:w-96" data-te-input-wrapper-init>
+      <p class="email-warning text-red-600 text-sm"></p>
+    </div>
+  </div>
+
+  <%- include('inputs/password') %>
+
+  <div class="flex justify-center">
+    <div class="relative mb-3 xl:w-96" data-te-input-wrapper-init>
+      <p class="password-warning text-red-600 text-sm"></p>
+    </div>
+  </div>
+
+  <%- include('inputs/telNumber') %>
+
+  <div class="flex justify-center">
+    <div class="relative mb-3 xl:w-96" data-te-input-wrapper-init>
+      <p class="phone-warning text-red-600 text-sm"></p>
+    </div>
+  </div>
+
+  <div
+    class="text-sm text-zinc-500 max-w-full flex justify-center items-center mx-16 my-3 max-[600px]:mx-4"
+  >
+    <div class="text-sm text-zinc-500 max-w-full">
+      By submitting my phone number, I agree to receive automated and
+      non-automated transactional and marketing calls/texts from Walkie!.
+      Consent not required; text STOP to 24006 to opt out. Opt out instructions
+      subject to change. Message and data rates may apply.
+      <a href="" class="text-emerald-400 font-bold">Mobile Terms</a> apply.
+    </div>
+  </div>
+  
+  <div
+    class="flex justify-center items-center gap-2 mx-16 my-3 max-[600px]:mx-4"
+  >
+    <input type="checkbox" name="" id="" required />
+    <div class="text-sm text-zinc-500 max-w-full">
+      I agree to Wag!'s
+      <a href="" class="text-emerald-400 font-bold">Terms</a> (including a
+      <a href="" class="text-emerald-400 font-bold">mutual arbitration clause</a
+      >) and
+      <a href="" class="text-emerald-400 font-bold">Privacy Policy</a>
+    </div>
+  </div>
+
+  <div
+    class="flex justify-center items-center gap-2 my-3 max-[600px]:mx-4 mr-[3.2rem]"
+  >
+    <input type="checkbox" name="" id="" required />
+    <div class="text-sm text-zinc-500">
+      I confirm that I am a US resident and am over 18
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center mx-16 my-3">
+    <button
+      class="bg-emerald-500 py-3 px-6 text-white font-bold rounded-lg hover:bg-emerald-400 transition duration-200"
+    >
+      Get Started
+    </button>
+  </div>
+</form>

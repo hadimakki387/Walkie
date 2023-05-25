@@ -22,6 +22,5 @@ const connectToDatabase = async (env) => {
     console.log(`MongoDB connection error: ${error}`);
   }
 };
-console.log(connectToDatabase)
 
 module.exports = connectToDatabase;

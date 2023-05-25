@@ -8,9 +8,9 @@ const index = async (req, res) => {
   let address;
   await DogWalker.findOne({ id: req.query.id }).then((foundWalker) => {
     if (foundWalker) {
-      res.render("profileWhenVisited", { foundWalker });
+      res.render("profileWhenVisited/index", { foundWalker });
     } else {
-      res.render("profileWhenVisited", {
+      res.render("profileWhenVisited/index", {
         profile,
         coverImg,
         description,

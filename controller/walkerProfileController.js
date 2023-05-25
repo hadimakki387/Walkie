@@ -11,7 +11,7 @@ const index = async (req, res) => {
       let description = foundWalker.description;
       let address = foundWalker.address;
 
-      res.render("WalkerProfile", {
+      res.render("walkerProfile/index", {
         profile,
         coverImg,
         description,
@@ -24,7 +24,7 @@ const index = async (req, res) => {
       let description;
       let name;
       let address;
-      res.render("WalkerProfile", {
+      res.render("walkerProfile/index", {
         profile,
         coverImg,
         description,

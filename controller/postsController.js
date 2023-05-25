@@ -23,7 +23,7 @@ const index = async (req, res) => {
       profile = foundWalker.profile;
     }
 
-    res.render("posts", { foundPosts, postsCount, profile });
+    res.render("posts/index", { foundPosts, postsCount, profile });
   } catch (error) {
     console.log(error);
     // Handle the error appropriately (e.g., send an error response to the client)

@@ -1,0 +1,48 @@
+<%foundPosts.forEach(foundPost=>{%> 
+    <%if(foundPost.availability===true){%>
+    <div
+      class="w-[100%] grid border border-neutral-300 rounded-sm p-4 gap-2 mb-4"
+    >
+      <img
+        src="uploads/<%=foundPost.img%>"
+        alt=""
+        class="w-32 relative justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
+      />
+      <div class="flex justify-between items-center w-[100%] gap-4">
+        <div>
+          <p
+            class="max-[650px]:text-2xl max-[500px]:text-xl max-[410px]:text-lg text-3xl font-bold text-zinc-600"
+          >
+            <%=foundPost.dogName%>! a <%=foundPost.dogBreed%>
+          </p>
+        </div>
+
+        <div>
+          <p class="text-xl font-bold text-zinc-600">15$</p>
+        </div>
+      </div>
+      <div>
+        <p
+          class="max-[650px]:text-lg max-[500px]:text-base max-[410px]:text-sm text-xl font-bold text-zinc-600"
+        >
+          Pet for <%=foundPost.ownerName%>
+        </p>
+      </div>
+      <div
+        class="max-[766px]:grid max-[766px]:m-auto max-[410px]:text-xs flex justify-between items-center w-[100%]"
+      >
+        <div>
+          <p class="w-1/2"><%=foundPost.descriptions%></p>
+        </div>
+        <div class="grid">
+          <button
+            name="BTN"
+            class="BTN bg-emerald-500 rounded-sm text-white p-3 w-[12rem] text-center hover:bg-white hover:text-emerald-500 border border-emerald-500 transition duration-200"
+            onclick="sendRequest('<%=foundPost.id%>')"
+          >
+            Send a requets
+          </button>
+        </div>
+      </div>
+    </div>
+    <% }%> <%})%>

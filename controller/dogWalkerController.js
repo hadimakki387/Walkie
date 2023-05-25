@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 
 const index = (req,res)=>{
-    res.render("dogWalkerSignUp");
+    res.render("dogWalkerSignUp/index");
 }
 
 const create = async (req, res) => {

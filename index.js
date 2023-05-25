@@ -5,6 +5,7 @@ const passport = require("passport");
 const session = require("express-session");
 const isLoggedIn = require('./middleware/isLoggedIn');
 const { DogOwner, DogWalker, walkingPost } = require("./src/user/userModels");
+const FileStore = require("session-file-store")(session);
 const connectToDatabase = require("./src/db");
 
 
@@ -13,11 +14,17 @@ app.set("view engine", "ejs");
 
 // Use body parser middleware and session management
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({
-  secret: "mySecret",
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+  session({
+    secret: "mySecret",
+    resave: false,
+    saveUninitialized: false,
+    store: new FileStore(),
+    cookie: {
+      maxAge: 3600000, // Set the expiration time for the session cookie to 1 hour (in milliseconds)
+    },
+  })
+);
 
 // Serve static files from public directory
 app.use(express.static("public"));

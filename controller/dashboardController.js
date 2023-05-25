@@ -1,6 +1,7 @@
 const { DogOwner, DogWalker, walkingPost } = require("../src/user/userModels");
 
 const index = async (req, res) => {
+
   if (req.user) {
     const { displayName, name, photos, emails, id } = req.user;
     const [img] = photos[0].value;
@@ -33,7 +34,7 @@ const index = async (req, res) => {
         let imageSrc = img ? img : null;
         const { foundPost, foundWalker } = await getFoundPostAndWalker(id);
 
-        res.render("dashboard/dashboard", { img: imageSrc, name, foundPost, foundwalker : foundWalker });
+        res.render("dashboard/index", { img: imageSrc, name, foundPost, foundwalker : foundWalker });
       } else {
         res.redirect("/signUp?error=account-not-existing");
       }
