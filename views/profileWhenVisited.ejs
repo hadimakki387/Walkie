@@ -1,4 +1,4 @@
-<%- include('header'); -%>
+<%- include('components/header'); -%>
 
 <div>
   <div class="">
@@ -45,14 +45,13 @@
       </nav>
     </div>
   </div>
-
   <div>
     <div class="w-full h-96 mt-20 bg-gray-600">
       <%if(foundWalker.coverImg){%>
       
       <img
         class="object-cover w-full h-full"
-        src="data:image/png;base64,<%=coverImg%>"
+        src="uploads/<%=foundWalker.coverImg%>"
         alt=""
       />
       <%}%>
@@ -64,11 +63,11 @@
         <div class="">
           <div class="bg-white relative">
             <% if (foundWalker.profile) { %>
-
+             
             <div class="m-auto profilePic relative bottom-16">
               
                     <img
-                      src="data:image/png;base64,<%Buffer.from(foundWalker.profile).toString('base64')%>"
+                      src="uploads/<%=foundWalker.profile%>"
                       alt=""
                       class="EditableProfImg bg-white flex justify-center items-center m-auto rounded-full h-32 w-32 object-contain"
                     />
@@ -158,5 +157,5 @@
     </div>
   </div>
 
-  <%- include('footer'); -%>
+  <%- include('components/footer'); -%>
 </div>

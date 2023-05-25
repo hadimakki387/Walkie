@@ -33,7 +33,7 @@ const index = async (req, res) => {
         let imageSrc = img ? img : null;
         const { foundPost, foundWalker } = await getFoundPostAndWalker(id);
 
-        res.render("dashboard", { img: imageSrc, name, foundPost, foundwalker : foundWalker });
+        res.render("dashboard/dashboard", { img: imageSrc, name, foundPost, foundwalker : foundWalker });
       } else {
         res.redirect("/signUp?error=account-not-existing");
       }

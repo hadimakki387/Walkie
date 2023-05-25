@@ -2,7 +2,7 @@ const { DogOwner, DogWalker, walkingPost } = require("../src/user/userModels");
 const _ = require('lodash');
 
 const index = (req,res)=>{
-    res.render("walkForm");
+    res.render("walkForm/walkForm");
 }
 
 const create = async(req,res)=>{

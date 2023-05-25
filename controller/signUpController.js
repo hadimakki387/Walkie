@@ -1,4 +1,6 @@
 const { DogOwner } = require("../src/user/userModels");
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
 
 const index = async (req, res) => {
   if (req.query.error === "account-not-existing") {
@@ -34,6 +36,45 @@ const index = async (req, res) => {
   }
 };
 
+const create = async(req,res)=>{
+  //adding a account for the user and checking if it existed
+
+  const { Fname, Lname, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const id = uuidv4();
+  const fullName = Fname + " " + Lname;
+
+  const dogOwner = new DogOwner({
+    Fname: Fname,
+    Lname: Lname,
+    name: fullName,
+    id: id,
+    email: email,
+    password: hashedPassword,
+  });
+
+  await DogOwner.findOne({ email: email })
+    .then((foundOwner) => {
+      if (!foundOwner) {
+        dogOwner.save();
+        const user = {
+          name: fullName,
+          id: id,
+          email: email,
+        };
+        req.session.user = user;
+        res.redirect("/dashboard");
+      } else {
+        res.redirect("/signIn?error=account-existing");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+}
+
 module.exports = {
-  index
+  index,
+  create
 };

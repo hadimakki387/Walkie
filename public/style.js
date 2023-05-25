@@ -161,4 +161,9 @@ $('.EditableProfImg').hover(()=>{
   $('.profilePic').toggleClass('brightness-75 ')
 })
 
+
+document.querySelector("form").addEventListener("submit", function (event) {
+  Swal.fire("Good job!", "You clicked the button!", "success");
+});
+
 console.log("style.js working")
