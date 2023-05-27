@@ -80,7 +80,6 @@ const dogWalker = require('./routes/dogWalker');
 app.use('/dog-walker', dogWalker);
 
 const logout = require('./routes/logout');
-const { stringify } = require("uuid");
 app.use('/logout', logout);
 
 app.get(

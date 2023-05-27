@@ -33,8 +33,5 @@
     "sweetalert2": "^11.7.3",
     "toastr": "^2.1.4",
     "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.3.2"
   }
 }

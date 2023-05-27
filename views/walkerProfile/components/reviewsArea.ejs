@@ -1,9 +1,10 @@
-<div>
+<div class="">
+  <% console.log(reviews) %>
   <p class="font-bold text-zinc-600 text-lg mb-2 border-b border-zinc-300">
     Reveiws
   </p>
   <% reviews.map(review=>{%>
-  <div class="grid gap-2 mt-6">
+  <div class="grid gap-2 mt-6 pb-6 border border-b-neutral-300 border-t-0 border-r-0 border-l-0">
     <div class="flex items-center gap-4">
       <img
         src="uploads/<%= review.owner.profImg %>"
@@ -12,7 +13,9 @@
       />
       <p><%= review.owner.name %></p>
     </div>
-
+    <p>
+      <%= review.review.title %>
+    </p>
     <p>
       <%= review.review.content %>
     </p>
