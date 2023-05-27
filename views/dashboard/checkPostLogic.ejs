@@ -1,5 +1,5 @@
 <%if(foundPost){%>
-    <div class="grid mt-8">
+    <div class="grid mt-8  w-2/3 m-auto">
       <div
         class="w-[100%] grid border border-neutral-300 rounded-sm p-4 gap-2 mb-4"
       >
@@ -47,16 +47,20 @@
           </div>
         </div>
         <div class="flex justify-between items-center my-4">
-          <a
-            href="/approve-request"
+          <form action="/dashboard" method="POST">
+            <input type="hidden" name="approve" value="approve" id="">
+            <button
             class="bg-emerald-500 px-4 py-2 border border-emerald-500 text-white hover:bg-white hover:text-emerald-500 transition duration-200"
-            >Approve</a
-          >
-          <a
-            href="/decline-request"
+            >Approve</button>
+          </form>
+          
+          <form action="/dashboard" method="post">
+            <input type="hidden" name="decline" value="decline" id="">
+            <button
             class="bg-emerald-500 px-4 py-2 border border-emerald-500 text-white hover:bg-white hover:text-emerald-500 transition duration-200"
-            >decline</a
-          >
+            >Decline</button>
+          </form>
+          
         </div>
         <%}else{%>
         <div class="grid place-items-center">

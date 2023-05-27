@@ -48,7 +48,7 @@ const walkingPostSchema = new mongoose.Schema({
   password: String,
   availability: Boolean,
   submittedBy: String,
-  
+  beingWalkedBy:String
 });
 
 const reviewSchema = new mongoose.Schema({

@@ -42,7 +42,7 @@ $(".homeBurger").on("click", () => {
   if ($(".leftSilder").hasClass("slideIn")) {
     $(".leftSilder").animate({ left: "0px" });
   } else {
-    $(".leftSilder").animate({ left: "-384px" });
+    $(".leftSilder").animate({ left: "-35rem" });
   }
 });
 

@@ -1,7 +1,11 @@
-const { DogOwner, DogWalker, walkingPost, Review } = require("../src/user/userModels");
+const {
+  DogOwner,
+  DogWalker,
+  walkingPost,
+  Review,
+} = require("../src/user/userModels");
 
 const index = async (req, res) => {
-
   if (req.user) {
     const { displayName, name, photos, emails, id } = req.user;
     const [img] = photos[0].value;
@@ -34,17 +38,20 @@ const index = async (req, res) => {
         let imageSrc = img ? img : null;
         const { foundPost, foundWalker } = await getFoundPostAndWalker(id);
 
-        res.render("dashboard/index", { img: imageSrc, name, foundPost, foundwalker : foundWalker });
+        res.render("dashboard/index", {
+          img: imageSrc,
+          name,
+          foundPost,
+          foundwalker: foundWalker,
+        });
       } else {
         res.redirect("/signUp?error=account-not-existing");
       }
     } catch (err) {
       console.log(err);
     }
-
   }
 };
-
 
 async function getFoundPostAndWalker(id) {
   let foundPost;
@@ -63,25 +70,60 @@ async function getFoundPostAndWalker(id) {
   return { foundPost, foundWalker };
 }
 
-const create  = async(req,res)=>{
-
+const create = async (req, res) => {
+  const { profileImg, approve, decline } = req.body;
   const { user } = req.session;
-  let { name, id, email, img } = user;
-  const profImg = req.file.filename; // Get the path of the uploaded file
+  const { name, id, email, img } = user;
 
-  await DogOwner.findOneAndUpdate(
-    { email: email },
-    { profImg: profImg } // Save the file path in the profImg field
-  ).catch((err) => {
-    console.log(err);
-  });
+  if (profileImg) {
+    await handleProfileImage(req, email);
+  } else if (approve) {
+    await handlePostApproval(id);
+  } else if (decline) {
+    await handlePostDecline(id);
+  }
 
   res.redirect("/dashboard");
+};
+
+async function handleProfileImage(req, email) {
+  try {
+    const profImg = req.file.filename;
+    await DogOwner.findOneAndUpdate({ email: email }, { profImg: profImg });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
+async function handlePostApproval(id) {
+  try {
+    const post = await walkingPost.findOne({ id: id });
+    if (post) {
+      await walkingPost.findOneAndUpdate(
+        { id: id },
+        { beingWalkedBy: post.submittedBy }
+      );
+      console.log(post);
+    } else {
+      console.log("Post not found");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
 
+async function handlePostDecline(id) {
+  try {
+    await walkingPost.findOneAndUpdate(
+      { id: id },
+      { availability: true, submittedBy: "", beingWalkedBy: "" }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 module.exports = {
-    index,
-    create
-}
+  index,
+  create,
+};

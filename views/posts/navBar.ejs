@@ -1,9 +1,9 @@
 <nav class=" ">
     <div class="mx-auto px-4">
-      <div class="">
-        <div class="flex justify-between">
+      <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center w-full">
           <!-- Primary Navbar items -->
-          <div class="hidden md:flex items-center space-x-1">
+          <div class=" md:flex items-center space-x-1">
             <!-- Website Logo -->
             <div class="">
               <a href="/" class="flex items-center py-4 px-2 mt-1">
@@ -15,8 +15,9 @@
               </a>
             </div>
           </div>
+        </div>
           <!-- Secondary Navbar items -->
-          <div class="md:flex items-center space-x-3">
+          <div class=" items-center space-x-3 ">
             <div
               class="slider hidden absolute right-24 top-6 bg-white shadow-sm shadow-zinc-500 rounded-md"
             >
@@ -37,21 +38,14 @@
               <img
                   src="uploads/<%=profile%>"
                   alt=""
-                  class="profile cursor-pointer bg-white flex justify-center items-center m-auto rounded-full h-16 w-16 object-contain"
+                  class="profile cursor-pointer bg-white flex justify-center items-center m-auto rounded-full h-16 w-16 object-contain "
                 />
             <%}else{%>
-              <img src="user.png" alt="" class="profile cursor-pointer w-16 rounded-full" />
+              <img src="user.png" alt="" class="profile cursor-pointer w-16 rounded-full " />
             <%}%>
 
-          </div>
-        </div>
-        <div class="md:hidden flex justify-between items-center">
-          <div class="">
-            <a href="#" class="flex items-center py-4 px-2 mt-1">
-              <img src="walkie.png" alt="Logo" class="w-32 mr-2" />
-            </a>
-          </div>
-          <div>
+            </div>
+        
             <!-- Mobile menu button -->
           </div>
         </div>
