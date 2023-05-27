@@ -1,8 +1,12 @@
-const { DogOwner, DogWalker, walkingPost } = require("../src/user/userModels");
+const { DogOwner, DogWalker, walkingPost,Review } = require("../src/user/userModels");
 const fs = require("fs");
+const findReviews = require("../utils/findReviews");
 
 const index = async (req, res) => {
   const { id } = req.session.user;
+  const result = await findReviews(id);
+  
+
   await DogWalker.findOne({ id: id }).then((foundWalker) => {
     if (foundWalker) {
       let name = foundWalker.name;
@@ -10,6 +14,7 @@ const index = async (req, res) => {
       let profile = foundWalker.profile ? foundWalker.profile : null;
       let description = foundWalker.description;
       let address = foundWalker.address;
+      let reviews = result.reviews
 
       res.render("walkerProfile/index", {
         profile,
@@ -17,6 +22,7 @@ const index = async (req, res) => {
         description,
         name,
         address,
+        reviews
       });
     } else {
       let coverImg;
@@ -24,12 +30,14 @@ const index = async (req, res) => {
       let description;
       let name;
       let address;
+      let reviews = result.reviews
       res.render("walkerProfile/index", {
         profile,
         coverImg,
         description,
         name,
         address,
+        reviews
       });
     }
   });

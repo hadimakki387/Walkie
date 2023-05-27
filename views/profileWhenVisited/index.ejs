@@ -11,7 +11,7 @@
     <div
       class="flex justify-center gap-9 w-1/2 max-[1150px]:w-11/12 m-auto max-[675px]:grid max-[675px]:w-full max-[675px]:place-items-center"
     >
-      <div class="relative bottom-5 z-10 w-2/5 text-center max-[675px]:w-3/5">
+      <div class="relative bottom-5 z-10 w-2/5 text-center max-[675px]:w-full">
         <div class="">
           <%- include('profile') %>
         <div class="flex justify-between items-center">
@@ -40,32 +40,10 @@
         </div>
       </div>
 
-      <div class="mt-4 grid gap-6">
+      <div class="mt-4 grid gap-6 w-full">
         <%- include('description') %>
-        <div>
-          <p
-            class="font-bold text-zinc-600 text-lg mb-4 pb-2 border-b border-zinc-300"
-          >
-            Reveiws
-          </p>
-          <div class="grid gap-2">
-            <div class="flex items-center gap-4">
-              <img
-                src="IMG_0292.png"
-                alt=""
-                class="bg-white flex justify-start items-start rounded-full h-12 w-12 object-contain relative"
-              />
-              <p>UserName</p>
-            </div>
-
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi,
-              est. Dignissimos enim odio facere rerum magni illo, voluptas,
-              facilis nobis ab reiciendis perferendis repellendus laborum esse
-              in eveniet sint. Soluta?
-            </p>
-          </div>
-        </div>
+        
+        <%- include('reviewsArea') %>
       </div>
     </div>
   </div>

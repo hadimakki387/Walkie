@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Define dog owner schema
 const dogOwnerSchema = new mongoose.Schema({
   Fname: String,
   Lname: String,
@@ -10,51 +9,70 @@ const dogOwnerSchema = new mongoose.Schema({
   address: String,
   password: String,
   profImg: String,
-  notification:Boolean,
+  notification: Boolean,
   dogs: [String],
+  reviews: [
+    {
+      type: mongoose.Schema.Types.String,
+      ref: "Review"
+    }
+  ]
 });
 
-// Define dog walker schema
 const dogWalkerSchema = new mongoose.Schema({
   Fname: String,
   Lname: String,
-  name:String,
+  name: String,
   email: String,
   password: String,
   address: String,
   telNumber: Number,
-  address: String,
   age: Number,
   id: String,
-  description:String,
-  profile:String,
-  coverImg:String,
-  reveiw:String,
+  description: String,
+  profile: String,
+  coverImg: String,
+  
   availability: [String],
-  specialSkills: [String],
+  specialSkills: [String]
 });
 
-// Define walking post schema
 const walkingPostSchema = new mongoose.Schema({
   ownerName: String,
   id: String,
   dogName: String,
   dogBreed: String,
   address: String,
-  descriptions:String,
+  descriptions: String,
   img: String,
   password: String,
-  availability:Boolean,
-  submittedBy:String,
+  availability: Boolean,
+  submittedBy: String,
+  
 });
 
-// Create models for each schema
+const reviewSchema = new mongoose.Schema({
+  title: String,
+  content: String,
+  rating: Number,
+  dogWalker: {
+    type: mongoose.Schema.Types.String,
+    ref: "DogWalker"
+  },
+  dogOwner: {
+    type: mongoose.Schema.Types.String,
+    ref: "DogOwner"
+  }
+});
+
 const DogOwner = mongoose.model("DogOwner", dogOwnerSchema);
 const DogWalker = mongoose.model("DogWalker", dogWalkerSchema);
 const walkingPost = mongoose.model("walkingPost", walkingPostSchema);
+const Review = mongoose.model("Review", reviewSchema);
 
 module.exports = {
   DogOwner,
   DogWalker,
   walkingPost,
+  Review
 };

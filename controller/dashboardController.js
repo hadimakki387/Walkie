@@ -1,4 +1,4 @@
-const { DogOwner, DogWalker, walkingPost } = require("../src/user/userModels");
+const { DogOwner, DogWalker, walkingPost, Review } = require("../src/user/userModels");
 
 const index = async (req, res) => {
 
@@ -20,7 +20,7 @@ const index = async (req, res) => {
         await dogOwner.save();
       }
 
-      res.render("dashboard", { img, name: displayName, foundPost });
+      res.render("dashboard/index", { img, name: displayName, foundPost });
     } catch (err) {
       console.log(err);
     }
@@ -41,8 +41,10 @@ const index = async (req, res) => {
     } catch (err) {
       console.log(err);
     }
+
   }
 };
+
 
 async function getFoundPostAndWalker(id) {
   let foundPost;
@@ -76,6 +78,7 @@ const create  = async(req,res)=>{
 
   res.redirect("/dashboard");
 }
+
 
 
 module.exports = {

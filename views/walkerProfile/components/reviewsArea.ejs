@@ -1,24 +1,22 @@
 <div>
-    <p
-      class="font-bold text-zinc-600 text-lg mb-2 border-b border-zinc-300"
-    >
-      Reveiws
-    </p>
-    <div class="grid gap-2">
-      <div class="flex items-center gap-4">
-        <img
-          src="IMG_0292.png"
-          alt=""
-          class="bg-white flex justify-start items-start rounded-full h-12 w-12 object-contain relative"
-        />
-        <p>UserName</p>
-      </div>
-
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi,
-        est. Dignissimos enim odio facere rerum magni illo, voluptas,
-        facilis nobis ab reiciendis perferendis repellendus laborum esse
-        in eveniet sint. Soluta?
-      </p>
+  <p class="font-bold text-zinc-600 text-lg mb-2 border-b border-zinc-300">
+    Reveiws
+  </p>
+  <% reviews.map(review=>{%>
+  <div class="grid gap-2 mt-6">
+    <div class="flex items-center gap-4">
+      <img
+        src="uploads/<%= review.owner.profImg %>"
+        alt=""
+        class="bg-white flex justify-start items-start rounded-full h-12 w-12 object-contain relative"
+      />
+      <p><%= review.owner.name %></p>
     </div>
+
+    <p>
+      <%= review.review.content %>
+    </p>
   </div>
+  <%}) %>
+</div>
+
