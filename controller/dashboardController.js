@@ -37,6 +37,7 @@ const index = async (req, res) => {
       if (foundOwner) {
         let imageSrc = img ? img : null;
         const { foundPost, foundWalker } = await getFoundPostAndWalker(id);
+        
 
         res.render("dashboard/index", {
           img: imageSrc,
@@ -58,7 +59,7 @@ async function getFoundPostAndWalker(id) {
   let foundWalker;
 
   try {
-    foundPost = await walkingPost.findOne({ id });
+    foundPost = await walkingPost.findOne({ id,isDone:undefined });
     if (foundPost) {
       const walkerId = foundPost.submittedBy;
       foundWalker = await DogWalker.findOne({ id: walkerId });
@@ -71,7 +72,7 @@ async function getFoundPostAndWalker(id) {
 }
 
 const create = async (req, res) => {
-  const { profileImg, approve, decline } = req.body;
+  const { profileImg, approve, decline, isDoneWalking, review, reviewTitle } = req.body;
   const { user } = req.session;
   const { name, id, email, img } = user;
 
@@ -81,6 +82,8 @@ const create = async (req, res) => {
     await handlePostApproval(id);
   } else if (decline) {
     await handlePostDecline(id);
+  } else if (isDoneWalking) {
+    await handleWorkDone(id,review,reviewTitle);
   }
 
   res.redirect("/dashboard");
@@ -100,10 +103,9 @@ async function handlePostApproval(id) {
     const post = await walkingPost.findOne({ id: id });
     if (post) {
       await walkingPost.findOneAndUpdate(
-        { id: id },
+        { id: id , beingWalkedBy:undefined},
         { beingWalkedBy: post.submittedBy }
       );
-      console.log(post);
     } else {
       console.log("Post not found");
     }
@@ -118,6 +120,42 @@ async function handlePostDecline(id) {
       { id: id },
       { availability: true, submittedBy: "", beingWalkedBy: "" }
     );
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function handleWorkDone(id,review,reviewTitle) {
+  try {
+    const post = await walkingPost.findOne({ id: id });
+    const walker = await DogWalker.findOne({ id: post.submittedBy });
+
+    let WorkedWithOwners = walker.OwnersWorkedWith || [];
+    WorkedWithOwners.push(id);
+
+    let walkedDogs = walker.OwnersWorkedWith.length
+
+    walker.walkedDogs = walkedDogs;
+    walker.OwnersWorkedWith = WorkedWithOwners;
+
+    const newReview = new Review({
+      title:reviewTitle,
+      content: review,
+      dogWalker:walker.id,
+      dogOwner:id
+    })
+
+    try {
+      const replacedWalker = await DogWalker.findByIdAndUpdate(
+        walker._id,
+        walker,
+        { new: true }
+      );
+      const updatePost = await walkingPost.findOneAndUpdate({id:id ,isDone:undefined},{isDone:true})
+      newReview.save()
+    } catch (err) {
+      console.log(err);
+    }
   } catch (err) {
     console.log(err);
   }

@@ -30,19 +30,29 @@ const index = async (req, res) => {
   }
 };
 
-const show = async(req,res)=>{
-    const id=req.body.id
-  await walkingPost.findOneAndUpdate({id:id},{availability:false,submittedBy:req.session.user.id})
-    .then(err=>{
-      console.log(err)
-    })
-  await DogOwner.findOneAndUpdate({id:req.session.user.id},{notification:true})
-  .then(err=>{
-    console.log(err)
-  })
-}
+const show = async (req, res) => {
+  const UserId = req.body.id;
+  const walkerId = req.session.user.id;
+  console.log(UserId);
+  console.log(walkerId);
+
+  await walkingPost
+    .findOneAndUpdate(
+      { id: UserId, isDone: undefined },
+      { availability: false, submittedBy: walkerId }
+    )
+    .then((err) => {
+      console.log(err);
+    });
+  await DogOwner.findOneAndUpdate(
+    { id: req.session.user.id },
+    { notification: true }
+  ).then((err) => {
+    console.log(err);
+  });
+};
 
 module.exports = {
   index,
-  show
+  show,
 };

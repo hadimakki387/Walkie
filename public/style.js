@@ -180,4 +180,12 @@ $(".walkForm").on("submit", (event) => {
   Swal.fire("Thank You!", "your request has been added", "success");
 });
 
+$('.isDoneButton').on("click", () => {
+  $('.isDoneDiv').removeClass('hidden')
+  $('.isDoneButton').on('click',()=>{
+    $('.isDoneForm')[0].submit()
+ })
+});
+
+
 console.log("style.js working")
