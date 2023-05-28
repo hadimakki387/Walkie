@@ -37,7 +37,7 @@ app.use(passport.session());
 
 // Connect to MongoDB database
 // Set the desired environment ('local' or 'production')
-const environment = 'local';
+const environment = 'production';
 
 connectToDatabase(environment)
   .then(() => {
