@@ -42,7 +42,7 @@ $(".homeBurger").on("click", () => {
   if ($(".leftSilder").hasClass("slideIn")) {
     $(".leftSilder").animate({ left: "0px" });
   } else {
-    $(".leftSilder").animate({ left: "-384px" });
+    $(".leftSilder").animate({ left: "-35rem" });
   }
 });
 
@@ -179,5 +179,13 @@ $('.EditableProfImg').on("hover", () => {
 $(".walkForm").on("submit", (event) => {
   Swal.fire("Thank You!", "your request has been added", "success");
 });
+
+$('.isDoneButton').on("click", () => {
+  $('.isDoneDiv').removeClass('hidden')
+  $('.isDoneButton').on('click',()=>{
+    $('.isDoneForm')[0].submit()
+ })
+});
+
 
 console.log("style.js working")

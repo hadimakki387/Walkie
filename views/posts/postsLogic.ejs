@@ -29,15 +29,15 @@
         </p>
       </div>
       <div
-        class="max-[766px]:grid max-[766px]:m-auto max-[410px]:text-xs flex justify-between items-center w-[100%]"
+        class="max-[766px]:grid max-[766px]:gap-4 max-[766px]:m-auto max-[410px]:text-xs flex justify-between items-center w-[100%]"
       >
-        <div>
-          <p class="w-1/2"><%=foundPost.descriptions%></p>
+        <div class="">
+          <p class="w-10/12  max-[766px]:w-full"><%=foundPost.descriptions%></p>
         </div>
         <div class="grid">
           <button
             name="BTN"
-            class="BTN bg-emerald-500 rounded-sm text-white p-3 w-[12rem] text-center hover:bg-white hover:text-emerald-500 border border-emerald-500 transition duration-200"
+            class="BTN bg-emerald-500 max-[766px]:w-full rounded-sm text-white p-3 w-[12rem] text-center hover:bg-white hover:text-emerald-500 border border-emerald-500 transition duration-200"
             onclick="sendRequest('<%=foundPost.id%>')"
           >
             Send a requets

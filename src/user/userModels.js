@@ -32,9 +32,11 @@ const dogWalkerSchema = new mongoose.Schema({
   description: String,
   profile: String,
   coverImg: String,
-  
-  availability: [String],
-  specialSkills: [String]
+  walkedDogs:Number,
+  OwnersWorkedWith: {
+    type: [String], // Define OwnersWorkedWith as an array of strings
+    default: [], // Set a default empty array if not provided
+  },
 });
 
 const walkingPostSchema = new mongoose.Schema({
@@ -48,7 +50,8 @@ const walkingPostSchema = new mongoose.Schema({
   password: String,
   availability: Boolean,
   submittedBy: String,
-  
+  beingWalkedBy:String,
+  isDone:Boolean
 });
 
 const reviewSchema = new mongoose.Schema({

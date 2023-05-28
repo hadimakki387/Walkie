@@ -28,7 +28,7 @@ const create = async(req,res)=>{
           await walkingPost
             .findOne({ id: id }) // Searches for an existing post by user ID
             .then((foundPost) => {
-              if (foundPost) {
+              if (foundPost && !foundPost.isDone) {
                 // Post exists so redirect back to homepage
                 setTimeout(() => {
                   res.redirect("/dashboard");

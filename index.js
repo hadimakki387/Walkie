@@ -8,7 +8,6 @@ const { DogOwner, DogWalker, walkingPost,Review } = require("./src/user/userMode
 const FileStore = require("session-file-store")(session);
 const connectToDatabase = require("./src/db");
 const mongoose = require("mongoose");
-const {FindDogWalkers , FindDogOwners , FindWalkerReviews} = require('./utils/usersQuery')
 
 
 // Set view engine
@@ -38,7 +37,7 @@ app.use(passport.session());
 
 // Connect to MongoDB database
 // Set the desired environment ('local' or 'production')
-const environment = 'local';
+const environment = 'production';
 
 connectToDatabase(environment)
   .then(() => {
@@ -82,6 +81,7 @@ app.use('/dog-walker', dogWalker);
 const logout = require('./routes/logout');
 app.use('/logout', logout);
 
+
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -95,21 +95,7 @@ app.get(
   }
 );
 
- 
-
-
-const newReview = new Review({
-  title: "killo raye7",
-  content: "zinje zinje.",
-  rating: 5,
-  dogOwner: "f7dc781d-2b77-49ed-b5a2-64f10f9e1b16", // UUID string of the dog walker
-  dogWalker: "778c52f3-03ff-4673-9e8a-53c21cf07ad6" // UUID string of the dog owner
-});
-
-
-
-
-const port = 3000;
+const port = 4001;
 app.listen(port, () => {
   console.log("listening on port " + port);
 });
